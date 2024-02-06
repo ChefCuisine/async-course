@@ -1,0 +1,31 @@
+﻿@model AsyncCourse.Template.Api.Models.TemplateDomain.TemplateDomainModel[];
+
+@{
+    ViewData["Title"] = "Template Domain Model Page";
+    // Layout = null;
+}
+
+<div class="text-center">
+    <h3 class="display-4">Welcome amigo</h3>
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Surname</th>
+        </tr>
+        @foreach (var domainModel in Model)
+        {
+            <tr>
+                <td>@domainModel.Id</td>
+                <td>@domainModel.Name</td>
+                <td>@domainModel.Surname</td>
+            </tr>
+        }
+    </table>
+
+    <div>
+        <a href="/TemplateDomainModel/Add">Add model</a>
+    </div>
+    
+</div>

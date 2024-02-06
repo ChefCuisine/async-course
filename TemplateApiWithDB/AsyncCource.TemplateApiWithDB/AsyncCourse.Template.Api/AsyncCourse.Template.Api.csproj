@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>AsyncCource.TemplateApiWithDB</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.11">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db.Configuration\AsyncCourse.Core.Db.Configuration.csproj" />
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Service.Domain.Startup\AsyncCourse.Core.Service.Domain.Startup.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Template.Api.Db\AsyncCourse.Template.Api.Db.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Template.Api.Models\AsyncCourse.Template.Api.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Settings\template_api_settings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

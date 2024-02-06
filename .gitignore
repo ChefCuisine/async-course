@@ -26,7 +26,6 @@ _deploy
 .vs
 .nuget/NuGet.exe
 *.received.txt
-syntax: glob
 *.sdf
 *.obj
 *.orig

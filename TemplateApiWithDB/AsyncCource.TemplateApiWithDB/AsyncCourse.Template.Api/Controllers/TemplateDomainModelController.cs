@@ -1,34 +1,30 @@
 ﻿using System.Diagnostics;
 using AsyncCource.TemplateApiWithDB.Models;
-using AsyncCourse.Template.Api.Db;
-using AsyncCourse.Template.Api.Db.Dbos;
-using AsyncCourse.Template.Api.Models.TemplateDomain;
+using AsyncCourse.Template.Api.Domain.Commands.TemplateDomain.Add;
+using AsyncCourse.Template.Api.Domain.Commands.TemplateDomain.List;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AsyncCource.TemplateApiWithDB.Controllers;
 
 public class TemplateDomainModelController : Controller
 {
-    private readonly TemplateApiDbContext templateApiDbContext;
+    private readonly IGetListCommand getListCommand;
+    private readonly IAddCommand addCommand;
 
     public TemplateDomainModelController(
-        AsyncCourse.Core.Db.DbContextSupport.IDbContextFactory<TemplateApiDbContext> contextFactory)
+        IGetListCommand getListCommand,
+        IAddCommand addCommand)
     {
-        this.templateApiDbContext = contextFactory.CreateDbContext();
+        this.getListCommand = getListCommand;
+        this.addCommand = addCommand;
     }
 
     // Показываем страницу со списком
     public async Task<IActionResult> Index()
     {
-        var result = await templateApiDbContext.TemplateDomainModelDbos.ToListAsync();
-        var mappedResult = result.Select(dbo => new TemplateDomainModel
-        {
-            Id = dbo.Id,
-            Name = dbo.Name,
-            Surname = dbo.Surname
-        }).ToArray();
-        return View(mappedResult);
+        var result = await getListCommand.GetListAsync();
+
+        return View(result.ToArray());
     }
 
     // Показываем страницу с добавлением
@@ -40,14 +36,7 @@ public class TemplateDomainModelController : Controller
     [HttpPost]
     public async Task<IActionResult> Save(string name, string surname)
     {
-        var result = await templateApiDbContext.AddAsync(new TemplateDomainModelDbo
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Surname = surname
-        });
-
-        await templateApiDbContext.SaveChangesAsync();
+        await addCommand.AddAsync(name, surname);
 
         return RedirectToAction("Index");
     }

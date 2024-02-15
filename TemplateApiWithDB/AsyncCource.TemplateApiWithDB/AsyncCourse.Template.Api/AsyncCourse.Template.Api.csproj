@@ -19,6 +19,7 @@
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db.Configuration\AsyncCourse.Core.Db.Configuration.csproj" />
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Service.Domain.Startup\AsyncCourse.Core.Service.Domain.Startup.csproj" />
       <ProjectReference Include="..\AsyncCourse.Template.Api.Db\AsyncCourse.Template.Api.Db.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Template.Api.Domain\AsyncCourse.Template.Api.Domain.csproj" />
       <ProjectReference Include="..\AsyncCourse.Template.Api.Models\AsyncCourse.Template.Api.Models.csproj" />
     </ItemGroup>
 

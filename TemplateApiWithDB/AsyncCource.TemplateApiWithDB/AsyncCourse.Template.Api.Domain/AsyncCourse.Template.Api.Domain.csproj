@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Template.Api.Db\AsyncCourse.Template.Api.Db.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Template.Api.Models\AsyncCourse.Template.Api.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+</Project>

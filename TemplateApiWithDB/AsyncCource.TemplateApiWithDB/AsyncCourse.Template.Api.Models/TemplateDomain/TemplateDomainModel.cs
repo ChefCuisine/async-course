@@ -1,4 +1,4 @@
-﻿namespace AsyncCourse.Template.Api.Models.TemplateDomain;
+﻿namespace AsyncCourse.Template.Api.Domain.Models.TemplateDomain;
 
 public class TemplateDomainModel
 {

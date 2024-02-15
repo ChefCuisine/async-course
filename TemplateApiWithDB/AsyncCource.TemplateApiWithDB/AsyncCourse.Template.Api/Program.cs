@@ -1,7 +1,6 @@
 using AsyncCource.TemplateApiWithDB.Configuration;
 using AsyncCource.TemplateApiWithDB.Extensions;
 using AsyncCourse.Core.Service.Domain.Startup;
-using AsyncCourse.Core.WarmUp;
 using AsyncCourse.Template.Api.Db.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +15,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAsyncCourseDbSettings<TemplateApiApplicationSettings>();
 builder.Services.AddAsyncCourseDomain();
 builder.Services.AddAsyncCourseDbContext();
+builder.Services.AddKafkaBus();
+builder.Services.AddCommands();
 
 
 // app section

@@ -4,8 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AssemblyName>AsyncCourse.Template.Api.Domain.Models</AssemblyName>
-        <RootNamespace>AsyncCourse.Template.Api.Domain.Models</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
 
 </Project>

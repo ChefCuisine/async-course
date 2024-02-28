@@ -1,5 +1,5 @@
-using AsyncCource.TemplateApiWithDB.Configuration;
-using AsyncCource.TemplateApiWithDB.Extensions;
+using AsyncCourse.Auth.Api.Configuration;
+using AsyncCourse.Auth.Api.Extensions;
 using AsyncCourse.Core.Db.Configuration;
 using AsyncCourse.Core.Service.Domain.Startup;
 
@@ -12,7 +12,7 @@ builder.Services.AddAsyncCourseProperties();
 builder.Services.AddControllersWithViews();
 
 // Add DB settings
-builder.Services.AddAsyncCourseDbSettings<TemplateApiApplicationSettings>();
+builder.Services.AddAsyncCourseDbSettings<AuthApiApplicationSettings>();
 builder.Services.AddAsyncCourseDomain();
 builder.Services.AddAsyncCourseDbContext();
 builder.Services.AddKafkaBus();
@@ -39,6 +39,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=TemplateDomainModel}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

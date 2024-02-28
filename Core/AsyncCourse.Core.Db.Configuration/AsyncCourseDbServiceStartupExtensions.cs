@@ -1,8 +1,6 @@
-﻿using AsyncCourse.Core.Db;
-using AsyncCourse.Core.Db.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace AsyncCourse.Template.Api.Db.Configuration;
+namespace AsyncCourse.Core.Db.Configuration;
 
 public static class AsyncCourseDbServiceStartupExtensions
 {

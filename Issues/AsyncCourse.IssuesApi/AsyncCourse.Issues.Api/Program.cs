@@ -1,25 +1,8 @@
-using AsyncCource.TemplateApiWithDB.Configuration;
-using AsyncCource.TemplateApiWithDB.Extensions;
-using AsyncCourse.Core.Db.Configuration;
-using AsyncCourse.Core.Service.Domain.Startup;
-
 var builder = WebApplication.CreateBuilder(args);
-
-// Add settings
-builder.Services.AddAsyncCourseProperties();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add DB settings
-builder.Services.AddAsyncCourseDbSettings<TemplateApiApplicationSettings>();
-builder.Services.AddAsyncCourseDomain();
-builder.Services.AddAsyncCourseDbContext();
-builder.Services.AddKafkaBus();
-builder.Services.AddCommands();
-
-
-// app section
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +22,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=TemplateDomainModel}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

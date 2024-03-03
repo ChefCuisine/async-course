@@ -6,4 +6,8 @@
       <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\AsyncCourse.Issues.Api.Db\AsyncCourse.Issues.Api.Db.csproj" />
+    </ItemGroup>
+
 </Project>

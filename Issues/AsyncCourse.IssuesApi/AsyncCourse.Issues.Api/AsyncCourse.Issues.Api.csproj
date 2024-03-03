@@ -15,9 +15,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Auth\AsyncCourse.AuthApi\AsyncCourse.Auth.Api.Client\AsyncCourse.Auth.Api.Client.csproj" />
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db.Configuration\AsyncCourse.Core.Db.Configuration.csproj" />
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Service.Domain.Startup\AsyncCourse.Core.Service.Domain.Startup.csproj" />
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
       <ProjectReference Include="..\AsyncCourse.Issues.Api.Db\AsyncCourse.Issues.Api.Db.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Issues.Api.Domain\AsyncCourse.Issues.Api.Domain.csproj" />
     </ItemGroup>
 
 </Project>

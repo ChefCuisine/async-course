@@ -1,4 +1,5 @@
-﻿using AsyncCourse.Core.Db;
+﻿using AsyncCourse.Auth.Api.Db.Dbos;
+using AsyncCourse.Core.Db;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class AuthApiDbContext : DbContext
         this.loggerFactory = loggerFactory;
     }
 
-    // [NotNull] public DbSet<TemplateDomainModelDbo> TemplateDomainModelDbos { get; set; }
+    [NotNull] public DbSet<AuthAccountDbo> Accounts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -28,7 +29,7 @@ public class AuthApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // var templateDomainModelDbos = modelBuilder.Entity<TemplateDomainModelDbo>();
-        // templateDomainModelDbos.HasKey(x => x.Id);
+        var accountDbos = modelBuilder.Entity<AuthAccountDbo>();
+        accountDbos.HasKey(x => x.Id);
     }
 }

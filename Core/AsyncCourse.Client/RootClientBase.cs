@@ -1,5 +1,6 @@
 ﻿using Vostok.Clusterclient.Core;
 using Vostok.Clusterclient.Core.Topology;
+using Vostok.Clusterclient.Transport;
 using Vostok.Logging.Abstractions;
 
 namespace AsyncCourse.Client;
@@ -11,6 +12,7 @@ public abstract class RootClientBase : ClientBase
             s =>
             {
                 s.ClusterProvider = new FixedClusterProvider(uri);
+                s.SetupUniversalTransport();
             },
             log)
     {

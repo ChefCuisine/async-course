@@ -2,6 +2,7 @@ using AsyncCourse.Auth.Api.Configuration;
 using AsyncCourse.Auth.Api.Extensions;
 using AsyncCourse.Core.Db.Configuration;
 using AsyncCourse.Core.Service.Domain.Startup;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +12,20 @@ builder.Services.AddAsyncCourseProperties();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
+    {
+        option.LoginPath = "/Access/Login";
+        option.ExpireTimeSpan = TimeSpan.FromDays(1);
+    });
+
 // Add DB settings
 builder.Services.AddAsyncCourseDbSettings<AuthApiApplicationSettings>();
 builder.Services.AddAsyncCourseDomain();
 builder.Services.AddAsyncCourseDbContext();
 builder.Services.AddKafkaBus();
+builder.Services.AddRepositories();
 builder.Services.AddCommands();
 
 
@@ -35,10 +45,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Access}/{action=Login}/{id?}");
 
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using AsyncCourse.Core.Db;
+using AsyncCourse.Issues.Api.Db.Dbos;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class IssuesApiDbContext : DbContext
         this.loggerFactory = loggerFactory;
     }
 
-    // [NotNull] public DbSet<TemplateDomainModelDbo> TemplateDomainModelDbos { get; set; }
+    [NotNull] public DbSet<IssueDbo> Issues { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -28,7 +29,7 @@ public class IssuesApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // var templateDomainModelDbos = modelBuilder.Entity<TemplateDomainModelDbo>();
-        // templateDomainModelDbos.HasKey(x => x.Id);
+        var templateDomainModelDbos = modelBuilder.Entity<IssueDbo>();
+        templateDomainModelDbos.HasKey(x => x.Id);
     }
 }

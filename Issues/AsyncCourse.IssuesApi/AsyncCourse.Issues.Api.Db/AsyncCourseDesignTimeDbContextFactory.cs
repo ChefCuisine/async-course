@@ -4,5 +4,5 @@ namespace AsyncCourse.Issues.Api.Db;
 
 public class AsyncCourseDesignTimeDbContextFactory : DesignTimeDbContextFactoryBase<IssuesApiDbContext, IssuesApiDbContextCreator>
 {
-    protected override string MigrationDatabaseName { get; } = "Test";
+    protected override string MigrationDatabaseName { get; } = "issues";
 }

@@ -1,0 +1,26 @@
+﻿@model IssueModel;
+
+@{
+}
+
+<div class="text">
+
+    <form asp-controller="Home" asp-action="Save" method="post">
+        <h3>Create issue</h3>
+        
+        <div>
+            <label>Title:</label><br />
+            <input type="text" name="Title" size="40"/>
+        </div>
+        <br /><br />
+
+        <div>
+            <label>Description:</label><br />
+            <textarea name="Description" rows = "10" cols = "80"></textarea>
+        </div>
+        <br /><br />
+
+        <button type="submit">Create</button>
+    </form>
+
+</div>

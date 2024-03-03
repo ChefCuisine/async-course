@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db.Configuration\AsyncCourse.Core.Db.Configuration.csproj" />
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db\AsyncCourse.Core.Db.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Issues.Api.Models\AsyncCourse.Issues.Api.Models.csproj" />
     </ItemGroup>
 
 </Project>

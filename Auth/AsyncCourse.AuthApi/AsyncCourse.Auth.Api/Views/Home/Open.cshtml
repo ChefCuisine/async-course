@@ -1,0 +1,74 @@
+﻿@model AccountModel
+
+@{
+}
+
+<div class="text">
+
+    <form asp-controller="Home" asp-action="Save" method="post">
+        <h3>Edit account @Model.Id</h3>
+        <input type="hidden" name="Id" value="@Model.Id"/>
+        <br />
+
+        <div>
+            <p type="text" name="FullName">@Model.FullName</p>
+        </div>
+
+        <div>
+            <p type="text" name="Email">@Model.Email</p>
+        </div>
+        <br />
+
+        <div>
+            <select name="Role">
+                @{
+                    if (Model.Role == AuthAccountRoleModel.Employee)
+                    {
+                        <option selected value="Employee">Employee</option>
+                    }
+                    else
+                    {
+                        <option value="Employee">Employee</option>
+                    }
+
+                    if (Model.Role == AuthAccountRoleModel.Administrator)
+                    {
+                        <option selected value="Administrator">Administrator</option>
+                    }
+                    else
+                    {
+                        <option value="Administrator">Administrator</option>
+                    }
+
+                    if (Model.Role == AuthAccountRoleModel.Manager)
+                    {
+                        <option selected value="Manager">Manager</option>
+                    }
+                    else
+                    {
+                        <option value="Manager">Manager</option>
+                    }
+
+                    if (Model.Role == AuthAccountRoleModel.Accountant)
+                    {
+                        <option selected value="Accountant">Accountant</option>
+                    }
+                    else
+                    {
+                        <option value="Accountant">Accountant</option>
+                    }
+                }
+
+            </select>
+        </div>
+        <br /><br />
+
+        <button type="submit">Save</button>
+    </form>
+    <br /><br />
+
+    <div>
+        <a href="/Home/Index">Back to list</a>
+    </div>
+
+</div>

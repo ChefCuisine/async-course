@@ -1,8 +1,32 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model AccountModel[];
+
+@{
+    ViewData["Title"] = "Accounts Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h3 class="display-4">Accounts</h3>
+
+    <table class="table table-bordered table-responsive table-hover">
+        <tr>
+            <th>Identifier</th>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        @foreach (var accountModel in Model)
+        {
+            <tr onclick="location.href = '@Url.Action("Open", "Home", new { Id = accountModel.Id })'">
+                <td>@accountModel.Id</td>
+                <td>@accountModel.FullName</td>
+                <td>@accountModel.Email</td>
+                <td>@accountModel.Role</td>
+            </tr>
+        }
+    </table>
+
+    <div>
+        <a href="/Home/Logout">Log out</a>
+    </div>
+    
 </div>

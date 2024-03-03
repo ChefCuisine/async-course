@@ -1,0 +1,40 @@
+﻿@model IssueModel;
+
+@{
+}
+
+<div class="text">
+
+    <form asp-controller="Home" asp-action="Save" method="post">
+        <h3>Edit issue @Model.Id</h3>
+        <input type="hidden" name="Id" value="@Model.Id"/>
+
+        <div>
+            <label>Title:</label><br />
+            <input type="text" name="Title" size="40" value="@Model.Title"/>
+        </div>
+        <br />
+
+        <div>
+            <label>Description:</label><br />
+            <textarea name="Description" rows = "10" cols = "80">@Model.Description</textarea>
+        </div>
+        <br />
+
+        <div>
+            <select name="Status">
+                <option value="Created">Created</option>
+                <option value="Done">Done</option>
+            </select>
+        </div>
+        <br /><br />
+
+        <button type="submit">Save</button>
+    </form>
+    <br /><br />
+
+    <div>
+        <a href="/Home/Index">Back to list</a>
+    </div>
+
+</div>

@@ -1,5 +1,7 @@
 ﻿using AsyncCourse.Auth.Api.Configuration;
 using AsyncCourse.Auth.Api.Db;
+using AsyncCourse.Auth.Api.Domain.Commands.Accounts;
+using AsyncCourse.Auth.Api.Domain.Repositories;
 using AsyncCourse.Core.Db.DbContextSupport;
 using AsyncCourse.Core.WarmUp;
 using AsyncCourse.Template.Kafka.MessageBus;
@@ -31,10 +33,21 @@ public static class AuthApiExtensions
             ;
     }
     
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        return services
+                .AddSingleton<IAccountRepository, AccountRepository>() // account repository
+            ;
+    }
+    
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
         return services
-            //.AddSingleton<IGetListCommand, GetListCommand>() // template domain commands
+            .AddSingleton<IGetListCommand, GetListCommand>() // auth domain commands
+            .AddSingleton<IGetCommand, GetCommand>()
+            .AddSingleton<IGetByLoginCommand, GetByLoginCommand>()
+            .AddSingleton<IAddCommand, AddCommand>()
+            .AddSingleton<IEditCommand, EditCommand>()
             ;
     }
 

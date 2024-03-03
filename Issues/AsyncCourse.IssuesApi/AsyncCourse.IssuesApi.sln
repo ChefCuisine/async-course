@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Issues.Api.Mode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Issues.Api", "AsyncCourse.Issues.Api\AsyncCourse.Issues.Api.csproj", "{D5BE4D47-6460-4A09-B4CB-B95F06014696}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{65959954-4A89-48E2-AEFB-9176897EDDA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Auth.Api.Client", "..\..\Auth\AsyncCourse.AuthApi\AsyncCourse.Auth.Api.Client\AsyncCourse.Auth.Api.Client.csproj", "{940EADBD-356B-4D6B-8034-F033CA5B5F2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,7 @@ Global
 		{6BDF9C5D-4142-434B-AC74-6B68724DFE28} = {2E28375E-B258-4EB1-8472-8330CA314CD1}
 		{4A71CA58-C936-427B-9855-B55E2394BAB0} = {2E28375E-B258-4EB1-8472-8330CA314CD1}
 		{D5BE4D47-6460-4A09-B4CB-B95F06014696} = {E16082D5-541A-4828-BEF3-299071C09C36}
+		{940EADBD-356B-4D6B-8034-F033CA5B5F2B} = {65959954-4A89-48E2-AEFB-9176897EDDA7}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D890E5EA-0F37-4459-9E4D-90D618581180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -97,5 +102,9 @@ Global
 		{D5BE4D47-6460-4A09-B4CB-B95F06014696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BE4D47-6460-4A09-B4CB-B95F06014696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5BE4D47-6460-4A09-B4CB-B95F06014696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{940EADBD-356B-4D6B-8034-F033CA5B5F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{940EADBD-356B-4D6B-8034-F033CA5B5F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{940EADBD-356B-4D6B-8034-F033CA5B5F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{940EADBD-356B-4D6B-8034-F033CA5B5F2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

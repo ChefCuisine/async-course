@@ -1,0 +1,45 @@
+﻿@model AsyncCourse.Auth.Api.Models.SignupModel;
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Signup</title>
+</head>
+<body>
+<div>
+    <form asp-controller="Access" asp-action="Signup" method="post">
+        <h3>Sign up</h3>
+        
+        <input type="email" placeholder="Email" asp-for="Email"/>
+        <br /><br />
+        
+        <input type="password" placeholder="Password" asp-for="Password"/>
+        <br /><br />
+        
+        <input type="password" placeholder="Repeat password" asp-for="RepeatedPassword"/>
+        <br /><br />
+        
+        <input type="text" placeholder="Surname" asp-for="Surname"/>
+        <br /><br />
+        
+        <input type="text" placeholder="Name" asp-for="Name"/>
+        <br /><br />
+
+        <button type="submit">Create account</button>
+        
+        @if (ViewData["ValidateMessage"] != null)
+        {
+            <br/>
+            <br/>
+            <label>@ViewData["ValidateMessage"]</label>
+        }
+        
+    </form>
+</div>
+</body>
+</html>

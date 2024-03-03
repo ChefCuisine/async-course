@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
       <ProjectReference Include="..\AsyncCourse.Auth.Api.Db\AsyncCourse.Auth.Api.Db.csproj" />
     </ItemGroup>
 

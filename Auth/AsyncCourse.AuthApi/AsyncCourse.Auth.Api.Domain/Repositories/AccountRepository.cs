@@ -13,7 +13,7 @@ public interface IAccountRepository
     Task<AuthAccount> GetByIdAsync(Guid id);
 
     Task AddAsync(AuthAccount account);
-    Task EditAsync(EditAuthAccount account);
+    Task<AuthAccount> EditAsync(EditAuthAccount account);
 }
 
 public class AccountRepository : IAccountRepository
@@ -66,14 +66,7 @@ public class AccountRepository : IAccountRepository
 
         if (dbo != null)
         {
-            return new AuthAccount
-            {
-                Id = dbo.Id,
-                Email = dbo.Email,
-                Name = dbo.Name,
-                Surname = dbo.Surname,
-                Role = dbo.Role
-            };
+            return Map(dbo);
         }
 
         return null;
@@ -94,12 +87,12 @@ public class AccountRepository : IAccountRepository
         await authApiDbContext.SaveChangesAsync();
     }
 
-    public async Task EditAsync(EditAuthAccount account)
+    public async Task<AuthAccount> EditAsync(EditAuthAccount account)
     {
         var existingAccount = await authApiDbContext.Accounts.FindAsync(account.Id);
         if (existingAccount == null)
         {
-            return;
+            return null;
         }
 
         existingAccount.Role = account.Role == AuthAccountRole.Unknown ? AuthAccountRole.Employee : account.Role;
@@ -107,5 +100,19 @@ public class AccountRepository : IAccountRepository
         authApiDbContext.Accounts.Update(existingAccount);
 
         await authApiDbContext.SaveChangesAsync();
+        
+        return Map(existingAccount);
+    }
+
+    private static AuthAccount Map(AuthAccountDbo dbo)
+    {
+        return new AuthAccount
+        {
+            Id = dbo.Id,
+            Email = dbo.Email,
+            Name = dbo.Name,
+            Surname = dbo.Surname,
+            Role = dbo.Role
+        };
     }
 }

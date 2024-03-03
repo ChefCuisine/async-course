@@ -9,46 +9,24 @@ public interface ITemlateKafkaMessageBus
     T Consume<T>(string topic, CancellationToken cancellationToken);
 }
 
-public class TemlateKafkaMessageBus : IDisposable, ITemlateKafkaMessageBus
+public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
 {
-    private readonly IProducer<Null, string> producer;
-    private readonly IConsumer<Ignore, string> consumer;
-
-    public TemlateKafkaMessageBus() : this(Constants.BootstrapServer)
-    {
-    }
-    
-    public TemlateKafkaMessageBus(string host)
-    {
-        var producerConfig = new ProducerConfig
-        {
-            BootstrapServers = host,
-            // ClientId = Dns.GetHostName()
-        };
-        var consumerConfig = new ConsumerConfig
-        {
-            GroupId = Constants.CustomGroup, // Указать обязательно. Определяет какой группе принадлежит консьюмер
-            BootstrapServers = host,
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
-
-        producer = new ProducerBuilder<Null, string>(producerConfig).Build();
-        consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-    }
-    
     public async Task<DeliveryResult<Null, string>> SendMessageAsync(string topic, string message)
     {
         try
         {
-            using (producer)
+            var producerConfig = new ProducerConfig
             {
-                var result = await producer.ProduceAsync(topic, new Message <Null, string>
-                {
-                    Value = message
-                });
+                BootstrapServers = Constants.BootstrapServer,
+                // ClientId = Dns.GetHostName()
+            };
+            using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
+            var result = await producer.ProduceAsync(topic, new Message <Null, string>
+            {
+                Value = message
+            });
 
-                return result;
-            }
+            return result;
         }
         catch (Exception e)
         {
@@ -61,37 +39,42 @@ public class TemlateKafkaMessageBus : IDisposable, ITemlateKafkaMessageBus
     {
         try
         {
-            using (consumer)
+            var consumerConfig = new ConsumerConfig
             {
-                consumer.Subscribe(topic);
+                GroupId = Constants.CustomGroup, // Указать обязательно. Определяет какой группе принадлежит консьюмер
+                BootstrapServers = Constants.BootstrapServer,
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
 
-                try
+            using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+            consumer.Subscribe(topic);
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    while (!cancellationToken.IsCancellationRequested)
+                    var consumerResult = consumer.Consume(cancellationToken);
+                    if (consumerResult.Message == null)
                     {
-                        var consumerResult = consumer.Consume(cancellationToken);
-                        if (consumerResult.Message == null)
-                        {
-                            Console.WriteLine("ConsumerResult.Message is null");
-                            break;
-                        }
-
-                        var deserialized = JsonConvert.DeserializeObject<T>(consumerResult.Message.Value);
-                        if (deserialized == null)
-                        {
-                            Console.WriteLine("Deserialized ConsumerResult.Message is null");
-                            break;
-                        }
-
-                        Console.WriteLine($"Delivery Timestamp: {consumerResult.Message.Timestamp.UtcDateTime}");
-                        return deserialized;
+                        Console.WriteLine("ConsumerResult.Message is null");
+                        break;
                     }
+
+                    var deserialized = JsonConvert.DeserializeObject<T>(consumerResult.Message.Value);
+                    if (deserialized == null)
+                    {
+                        Console.WriteLine("Deserialized ConsumerResult.Message is null");
+                        break;
+                    }
+
+                    Console.WriteLine($"Delivery Timestamp: {consumerResult.Message.Timestamp.UtcDateTime}");
+                    return deserialized;
                 }
-                catch (OperationCanceledException e)
-                {
-                    Console.WriteLine(e.Message);
-                    consumer.Close();
-                }
+            }
+            catch (OperationCanceledException e)
+            {
+                Console.WriteLine(e.Message);
+                consumer.Close();
             }
         }
         catch (Exception e)
@@ -101,11 +84,5 @@ public class TemlateKafkaMessageBus : IDisposable, ITemlateKafkaMessageBus
         }
 
         return default;
-    }
-
-    public void Dispose()
-    {
-        producer.Dispose();
-        consumer.Dispose();
     }
 }

@@ -20,6 +20,7 @@ public class IssuesApiDbContext : DbContext
     }
 
     [NotNull] public DbSet<IssueDbo> Issues { get; set; }
+    [NotNull] public DbSet<IssueAccountDbo> Accounts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -29,7 +30,10 @@ public class IssuesApiDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var templateDomainModelDbos = modelBuilder.Entity<IssueDbo>();
-        templateDomainModelDbos.HasKey(x => x.Id);
+        var issueDbos = modelBuilder.Entity<IssueDbo>();
+        issueDbos.HasKey(x => x.Id);
+        
+        var accountDbos = modelBuilder.Entity<IssueAccountDbo>();
+        accountDbos.HasKey(x => x.AccountId);
     }
 }

@@ -4,6 +4,7 @@ using AsyncCourse.Core.WarmUp;
 using AsyncCourse.Issues.Api.Configuration;
 using AsyncCourse.Issues.Api.Db;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues;
+using AsyncCourse.Issues.Api.Domain.Commands.IssuesAccounts;
 using AsyncCourse.Issues.Api.Domain.Repositories;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Microsoft.EntityFrameworkCore.Design;
@@ -39,6 +40,7 @@ public static class IssuesApiExtensions
     {
         return services
                 .AddSingleton<IIssueRepository, IssueRepository>() // issueRepository repository
+                .AddSingleton<IIssueAccountRepository, IssueAccountRepository>() // issueAccountRepository repository
             ;
     }
     
@@ -48,6 +50,8 @@ public static class IssuesApiExtensions
             .AddSingleton<IGetListCommand, GetListCommand>() // issues domain commands
             .AddSingleton<IAddCommand, AddCommand>()
             .AddSingleton<IGetCommand, GetCommand>()
+            .AddSingleton<IReassignCommand, ReassignCommand>()
+            .AddSingleton<IAddIssueAccountCommand, AddIssueAccountCommand>() // issues account commands
             ;
     }
     

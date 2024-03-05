@@ -1,26 +1,67 @@
 ﻿using System.Diagnostics;
+using AsyncCourse.Auth.Api.Domain.Commands.Accounts;
+using AsyncCourse.Auth.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using AsyncCourse.Auth.Api.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncCourse.Auth.Api.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IGetListCommand getListCommand;
+    private readonly IGetCommand getCommand;
+    private readonly IEditCommand editCommand;
 
-    public HomeController(ILogger<HomeController> logger)
+    private const string AuthType = CookieAuthenticationDefaults.AuthenticationScheme;
+
+    public HomeController(
+        IGetListCommand getListCommand,
+        IGetCommand getCommand,
+        IEditCommand editCommand)
     {
-        _logger = logger;
+        this.getListCommand = getListCommand;
+        this.getCommand = getCommand;
+        this.editCommand = editCommand;
     }
 
-    public IActionResult Index()
+    // Показываем страницу со списком аккаунтов
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var result = await getListCommand.GetListAsync();
+
+        var mappedResult = result.Select(AccountMapper.MapFrom).ToArray();
+
+        return View(mappedResult.ToArray());
     }
 
-    public IActionResult Privacy()
+    // Показываем редактируемую страницу карточки
+    public async Task<IActionResult> Open(Guid id)
     {
-        return View();
+        var result = await getCommand.GetByIdAsync(id);
+        if (result == null)
+        {
+            return RedirectToAction("Index");
+        }
+
+        return View(AccountMapper.MapFrom(result));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Save([FromForm] EditAccountModel editAccountModel)
+    {
+        await editCommand.EditAsync(AccountMapper.MapFromEditAccountModel(editAccountModel));
+
+        return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(AuthType);
+        return RedirectToAction("Login", "Access");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

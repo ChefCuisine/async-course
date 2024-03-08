@@ -1,8 +1,7 @@
-﻿using AsyncCourse.Auth.Api.Domain.Repositories;
+﻿using AsyncCourse.Auth.Api.Domain.Commands.Accounts.Extensions;
+using AsyncCourse.Auth.Api.Domain.Repositories;
 using AsyncCourse.Auth.Api.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus;
-using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
-using Newtonsoft.Json;
 
 namespace AsyncCourse.Auth.Api.Domain.Commands.Accounts;
 
@@ -25,22 +24,20 @@ public class EditCommand : IEditCommand
     public async Task EditAsync(EditAuthAccount account)
     {
         var updatedAccount = await accountRepository.EditAsync(account);
-        
-        var kafkaAccount = Map(updatedAccount);
-        var message = JsonConvert.SerializeObject(kafkaAccount);
-
-        await messageBus.SendMessageAsync(Constants.AccountUpdateTopic, message);
-    }
-    
-    private static MessageBusAccount Map(AuthAccount account)
-    {
-        return new MessageBusAccount
+        if (updatedAccount == null)
         {
-            Id = account.Id,
-            Email = account.Email,
-            Name = account.Email,
-            Surname = account.Surname,
-            Role = account.Role.ToString()
-        };
+            return;
+        }
+
+        await SendEvents(updatedAccount);
+    }
+
+    private async Task SendEvents(AuthAccount updatedAccount)
+    {
+        var businessEventMessage = updatedAccount
+            .GetEventRoleChanged()
+            .ToBusinessMessage();
+
+        await messageBus.SendMessageAsync(Constants.AccountsTopic, businessEventMessage);
     }
 }

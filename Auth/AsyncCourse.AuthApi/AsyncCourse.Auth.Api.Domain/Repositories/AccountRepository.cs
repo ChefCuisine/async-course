@@ -28,33 +28,19 @@ public class AccountRepository : IAccountRepository
     public async Task<List<AuthAccount>> GetListAsync()
     {
         var result = await authApiDbContext.Accounts.ToListAsync();
-        var mappedResult = result.Select(dbo => new AuthAccount
-        {
-            Id = dbo.Id,
-            Email = dbo.Email,
-            Name = dbo.Name,
-            Surname = dbo.Surname,
-            Role = dbo.Role
-        }).ToList();
+        var mappedResult = result.Select(DboToDomain).ToList();
 
         return mappedResult;
     }
     
     public async Task<AuthAccount> GetByLoginAndPasswordAsync(string email, string password)
     {
-        var result = authApiDbContext.Accounts
+        var dbo = authApiDbContext.Accounts
             .FirstOrDefault(account => account.Email == email && account.Password == password);
 
-        if (result != null)
+        if (dbo != null)
         {
-            return new AuthAccount
-            {
-                Id = result.Id,
-                Email = result.Email,
-                Name = result.Name,
-                Surname = result.Surname,
-                Role = result.Role
-            };
+            return DboToDomain(dbo);
         }
 
         return null;
@@ -66,7 +52,7 @@ public class AccountRepository : IAccountRepository
 
         if (dbo != null)
         {
-            return Map(dbo);
+            return DboToDomain(dbo);
         }
 
         return null;
@@ -74,15 +60,7 @@ public class AccountRepository : IAccountRepository
     
     public async Task AddAsync(AuthAccount account)
     {
-        await authApiDbContext.Accounts.AddAsync(new AuthAccountDbo
-        {
-            Id = account.Id == Guid.Empty ? Guid.NewGuid() : account.Id,
-            Email = account.Email,
-            Password = account.Password,
-            Name = account.Name,
-            Surname = account.Surname,
-            Role = account.Role == AuthAccountRole.Unknown ? AuthAccountRole.Employee : account.Role
-        });
+        await authApiDbContext.Accounts.AddAsync(DomainToDbo(account));
 
         await authApiDbContext.SaveChangesAsync();
     }
@@ -101,10 +79,25 @@ public class AccountRepository : IAccountRepository
 
         await authApiDbContext.SaveChangesAsync();
         
-        return Map(existingAccount);
+        return DboToDomain(existingAccount);
     }
 
-    private static AuthAccount Map(AuthAccountDbo dbo)
+    #region Mapping
+
+    private static AuthAccountDbo DomainToDbo(AuthAccount account)
+    {
+        return new AuthAccountDbo
+        {
+            Id = account.Id == Guid.Empty ? Guid.NewGuid() : account.Id,
+            Email = account.Email,
+            Password = account.Password,
+            Name = account.Name,
+            Surname = account.Surname,
+            Role = account.Role == AuthAccountRole.Unknown ? AuthAccountRole.Employee : account.Role
+        };
+    }
+
+    private static AuthAccount DboToDomain(AuthAccountDbo dbo)
     {
         return new AuthAccount
         {
@@ -115,4 +108,6 @@ public class AccountRepository : IAccountRepository
             Role = dbo.Role
         };
     }
+
+    #endregion
 }

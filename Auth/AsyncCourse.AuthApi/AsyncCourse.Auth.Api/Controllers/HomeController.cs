@@ -57,6 +57,8 @@ public class HomeController : Controller
 
         return RedirectToAction("Index");
     }
+    
+    // todo Добавить возможность удаления (с отправкой CUD-deleted)
 
     public async Task<IActionResult> Logout()
     {

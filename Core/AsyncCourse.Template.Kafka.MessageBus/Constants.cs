@@ -8,9 +8,9 @@ public static class Constants
 
     public const string CustomGroup = "custom-group";
     
-    public const string AccountCreateTopic = "account-create";
-    public const string AccountUpdateTopic = "account-update";
-    
-    public const string IssueCreateTopic = "issue-create";
-    public const string IssueUpdateTopic = "issue-update";
+    public const string AccountsStreamTopic = "accounts-stream"; // топик для CUD-событий по аккаунтам
+    public const string AccountsTopic = "accounts"; // топик для BE-событий по аккаунтам
+
+    public const string IssuesStreamTopic = "issues-stream";
+    public const string IssuesTopic = "issues";
 }

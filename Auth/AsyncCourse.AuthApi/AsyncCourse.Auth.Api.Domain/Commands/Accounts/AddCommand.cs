@@ -1,8 +1,7 @@
-﻿using AsyncCourse.Auth.Api.Domain.Repositories;
+﻿using AsyncCourse.Auth.Api.Domain.Commands.Accounts.Extensions;
+using AsyncCourse.Auth.Api.Domain.Repositories;
 using AsyncCourse.Auth.Api.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus;
-using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
-using Newtonsoft.Json;
 
 namespace AsyncCourse.Auth.Api.Domain.Commands.Accounts;
 
@@ -26,21 +25,15 @@ public class AddCommand : IAddCommand
     {
         await accountRepository.AddAsync(account);
 
-        var kafkaAccount = Map(account);
-        var message = JsonConvert.SerializeObject(kafkaAccount);
-
-        await messageBus.SendMessageAsync(Constants.AccountCreateTopic, message);
+        await SendEvents(account);
     }
 
-    private static MessageBusAccount Map(AuthAccount account)
+    private async Task SendEvents(AuthAccount account)
     {
-        return new MessageBusAccount
-        {
-            Id = account.Id,
-            Email = account.Email,
-            Name = account.Email,
-            Surname = account.Surname,
-            Role = account.Role.ToString()
-        };
+        var streamEventMessage = account
+            .GetEventCreated()
+            .ToStreamMessage();
+
+        await messageBus.SendMessageAsync(Constants.AccountsStreamTopic, streamEventMessage);
     }
 }

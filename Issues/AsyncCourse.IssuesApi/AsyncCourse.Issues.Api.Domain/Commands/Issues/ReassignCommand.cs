@@ -1,6 +1,8 @@
-﻿using AsyncCourse.Issues.Api.Domain.Repositories;
-using AsyncCourse.Issues.Api.Models.Accounts;
+﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
+using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
+using AsyncCourse.Issues.Api.Domain.Repositories;
 using AsyncCourse.Issues.Api.Models.Issues;
+using AsyncCourse.Template.Kafka.MessageBus;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.Issues;
 
@@ -9,36 +11,44 @@ public interface IReassignCommand
     Task Reassign();
 }
 
-public class ReassignCommand : IReassignCommand
+public class ReassignCommand : IReassignCommand // todo Role Manager
 {
+    private readonly IIssueAssigner issueAssigner;
     private readonly IIssueRepository issueRepository;
-    private readonly IIssueAccountRepository issueAccountRepository;
+    private readonly ITemlateKafkaMessageBus messageBus;
 
-    private readonly Random random;
-
-    public ReassignCommand(IIssueRepository issueRepository, IIssueAccountRepository issueAccountRepository)
+    public ReassignCommand(
+        IIssueAssigner issueAssigner,
+        IIssueRepository issueRepository,
+        ITemlateKafkaMessageBus messageBus)
     {
+        this.issueAssigner = issueAssigner;
         this.issueRepository = issueRepository;
-        this.issueAccountRepository = issueAccountRepository;
-
-        random = new Random();
+        this.messageBus = messageBus;
     }
 
     public async Task Reassign()
     {
-        var allIssues = await issueRepository.GetListAsync();
-        var allUnassigned = allIssues.Where(x => x.Status != IssueStatus.Done);
-
-        var allAccounts = await issueAccountRepository.GetAccountsAsync();
-        var allEmployees = allAccounts.Where(x => x.Role == IssueAccountRole.Employee).ToList();
-
-        foreach (var issue in allUnassigned)
+        var issues = (await issueAssigner.AssignAllAsync()).ToList();
+        if (!issues.Any())
         {
-            var employeeIndex = random.Next(0, allEmployees.Count);
-            var employee = allEmployees.ElementAt(employeeIndex);
-            issue.AccountId = employee.AccountId;
-
-            await issueRepository.AddAsync(issue);
+            return;
         }
+
+        await issueRepository.AddBatchAsync(issues);
+
+        foreach (var assignedIssue in issues) // todo toBatch
+        {
+            await SendEvents(assignedIssue);
+        }
+    }
+
+    private async Task SendEvents(Issue assignedIssue)
+    {
+        var businessEventMessage = assignedIssue
+            .GetEventIssueReassigned()
+            .ToBusinessMessage();
+
+        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
     }
 }

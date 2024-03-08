@@ -13,7 +13,7 @@ public static class IssueMapper
             Title = issue.Title,
             Description = issue.Description,
             Status = MapToModel(issue.Status),
-            AccountId = issue.AccountId
+            AssignedToAccountId = issue.AssignedToAccountId
         };
     }
 
@@ -25,7 +25,19 @@ public static class IssueMapper
             Title = issueModel.Title,
             Description = issueModel.Description,
             Status = MapFromModel(issueModel.Status),
-            AccountId = issueModel.AccountId
+            AssignedToAccountId = issueModel.AssignedToAccountId
+        };
+    }
+    
+    public static Issue MapFromEditIssueModel(EditIssueModel issueModel)
+    {
+        return new Issue
+        {
+            Id = issueModel.Id == Guid.Empty ? Guid.NewGuid() : issueModel.Id,
+            Title = issueModel.Title,
+            Description = issueModel.Description,
+            Status = MapFromModel(issueModel.Status),
+            AssignedToAccountId = issueModel.AssignedToAccountId
         };
     }
 

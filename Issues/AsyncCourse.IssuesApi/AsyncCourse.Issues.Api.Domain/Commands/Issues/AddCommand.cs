@@ -1,8 +1,8 @@
-﻿using AsyncCourse.Issues.Api.Domain.Repositories;
+﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
+using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
+using AsyncCourse.Issues.Api.Domain.Repositories;
 using AsyncCourse.Issues.Api.Models.Issues;
 using AsyncCourse.Template.Kafka.MessageBus;
-using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
-using Newtonsoft.Json;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.Issues;
 
@@ -11,36 +11,42 @@ public interface IAddCommand
     Task AddAsync(Issue issue);
 }
 
-public class AddCommand : IAddCommand
+public class AddCommand : IAddCommand // todo Role Any
 {
+    private readonly IIssueAssigner issueAssigner;
     private readonly IIssueRepository issueRepository;
     private readonly ITemlateKafkaMessageBus messageBus;
 
-    public AddCommand(IIssueRepository issueRepository, ITemlateKafkaMessageBus messageBus)
+    public AddCommand(
+        IIssueAssigner issueAssigner,
+        IIssueRepository issueRepository,
+        ITemlateKafkaMessageBus messageBus)
     {
+        this.issueAssigner = issueAssigner;
         this.issueRepository = issueRepository;
         this.messageBus = messageBus;
     }
 
     public async Task AddAsync(Issue issue)
     {
-        await issueRepository.AddAsync(issue);
+        var assignedIssue = await issueAssigner.AssignAsync(issue);
         
-        var kafkaAccount = Map(issue);
-        var message = JsonConvert.SerializeObject(kafkaAccount);
+        await issueRepository.AddAsync(assignedIssue);
 
-        await messageBus.SendMessageAsync(Constants.IssueCreateTopic, message);
+        await SendEvents(assignedIssue);
     }
-    
-    private static MessageBusIssue Map(Issue issue)
+
+    private async Task SendEvents(Issue assignedIssue)
     {
-        return new MessageBusIssue
-        {
-            Id = issue.Id,
-            Title = issue.Title,
-            Description = issue.Description,
-            Status = issue.Status.ToString(),
-            AccountId = issue.AccountId,
-        };
+        var streamEventMessage = assignedIssue
+            .GetEventCreated()
+            .ToStreamMessage();
+
+        var businessEventMessage = assignedIssue
+            .GetEventIssueReassigned()
+            .ToBusinessMessage();
+
+        await messageBus.SendMessageAsync(Constants.IssuesStreamTopic, streamEventMessage);
+        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
     }
 }

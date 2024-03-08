@@ -2,6 +2,7 @@
 using AsyncCourse.Issues.Api.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
 using Vostok.Logging.Abstractions;
 
 var kafkaBus = new TemlateKafkaMessageBus();
@@ -11,17 +12,39 @@ while (true)
 {
     var cancellationToken = new CancellationToken();
 
-    var createAccountResult = kafkaBus.Consume<MessageBusAccount>(Constants.AccountCreateTopic, cancellationToken);
-    if (createAccountResult != null)
+    var accountsStreamResult = kafkaBus.Consume<MessageBusAccountStreamEvent>(Constants.AccountsStreamTopic, cancellationToken);
+    if (accountsStreamResult != null)
     {
-        var account = MapAccount(createAccountResult);
-        await issuesApiClient.SaveAsync(account);
+        switch (accountsStreamResult.Type)
+        {
+            case MessageBusAccountStreamEventType.Created:
+                var account = MapAccount(accountsStreamResult.Context);
+                await issuesApiClient.SaveAsync(account);
+                break;
+            case MessageBusAccountStreamEventType.Updated:
+                // todo
+                break;
+            case MessageBusAccountStreamEventType.Deleted:
+                // todo
+                break;
+            case MessageBusAccountStreamEventType.Unknown:
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
-    var updateAccountResult = kafkaBus.Consume<MessageBusAccount>(Constants.AccountUpdateTopic, cancellationToken);
-    if (updateAccountResult != null)
+    var accountsResult = kafkaBus.Consume<MessageBusAccountsEvent>(Constants.AccountsTopic, cancellationToken);
+    if (accountsResult != null)
     {
-        await issuesApiClient.SaveAsync(MapAccount(updateAccountResult));
+        switch (accountsResult.Type)
+        {
+            case MessageBusAccountsEventType.RoleChanged:
+                await issuesApiClient.UpdateAsync(MapAccount(accountsResult.Context));
+                break;
+            case MessageBusAccountsEventType.Unknown:
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
 

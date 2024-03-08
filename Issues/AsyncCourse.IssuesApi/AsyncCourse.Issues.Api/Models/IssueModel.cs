@@ -10,7 +10,7 @@ public class IssueModel
 
     public IssueStatusModel Status { get; set; }
     
-    public Guid? AccountId { get; set; }
+    public Guid? AssignedToAccountId { get; set; }
 }
 
 public enum IssueStatusModel

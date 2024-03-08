@@ -29,4 +29,18 @@ public class IssuesApiClient : RootClientBase, IIssuesApiClient
         }
         return operationResult;
     }
+
+    public async Task<OperationResult<bool>> UpdateAsync(IssueAccount account)
+    {
+        var request = Request
+            .Post("/issues-account/update")
+            .WithJsonContent(account);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
 }

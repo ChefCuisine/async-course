@@ -24,14 +24,7 @@ public class IssueAccountRepository : IIssueAccountRepository
     
     public async Task CreateAsync(IssueAccount issueAccount)
     {
-        await issuesApiDbContext.Accounts.AddAsync(new IssueAccountDbo
-        {
-            AccountId = issueAccount.AccountId,
-            Email = issueAccount.Email,
-            Name = issueAccount.Name,
-            Surname = issueAccount.Surname,
-            Role = issueAccount.Role
-        });
+        await issuesApiDbContext.Accounts.AddAsync(DomainToDbo(issueAccount));
 
         await issuesApiDbContext.SaveChangesAsync();
     }
@@ -46,6 +39,8 @@ public class IssueAccountRepository : IIssueAccountRepository
 
         existingAccount.Role = issueAccount.Role;
         
+        // todo могло измениться еще что-то
+        
         issuesApiDbContext.Accounts.Update(existingAccount);
 
         await issuesApiDbContext.SaveChangesAsync();
@@ -54,15 +49,36 @@ public class IssueAccountRepository : IIssueAccountRepository
     public async Task<List<IssueAccount>> GetAccountsAsync()
     {
         var result = await issuesApiDbContext.Accounts.ToListAsync();
-        var mappedResult = result.Select(dbo => new IssueAccount
+        var mappedResult = result.Select(DboToDomain).ToList();
+
+        return mappedResult;
+    }
+
+    #region Mapping
+
+    private static IssueAccountDbo DomainToDbo(IssueAccount issueAccount)
+    {
+        return new IssueAccountDbo
+        {
+            AccountId = issueAccount.AccountId,
+            Email = issueAccount.Email,
+            Name = issueAccount.Name,
+            Surname = issueAccount.Surname,
+            Role = issueAccount.Role
+        };
+    }
+
+    private static IssueAccount DboToDomain(IssueAccountDbo dbo)
+    {
+        return new IssueAccount
         {
             AccountId = dbo.AccountId,
             Email = dbo.Email,
             Name = dbo.Name,
             Surname = dbo.Surname,
             Role = dbo.Role
-        }).ToList();
-
-        return mappedResult;
+        };
     }
+
+    #endregion
 }

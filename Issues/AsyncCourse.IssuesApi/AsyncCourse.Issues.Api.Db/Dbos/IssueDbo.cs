@@ -18,6 +18,6 @@ public class IssueDbo
     [Column("status")]
     public IssueStatus Status { get; set; }
     
-    [Column("accound_id")]
-    public Guid? AccountId { get; set; }
+    [Column("assigned_to_accound_id")]
+    public Guid? AssignedToAccountId { get; set; }
 }

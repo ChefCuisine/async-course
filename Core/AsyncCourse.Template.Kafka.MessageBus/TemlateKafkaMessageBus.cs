@@ -11,6 +11,7 @@ public interface ITemlateKafkaMessageBus
 
 public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
 {
+    // todo вероятнее всего можно отправлять в кафку батчем, нужно узнать как и переписать метод чтоб принимал массив
     public async Task<DeliveryResult<Null, string>> SendMessageAsync(string topic, string message)
     {
         try
@@ -21,7 +22,7 @@ public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
                 // ClientId = Dns.GetHostName()
             };
             using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
-            var result = await producer.ProduceAsync(topic, new Message <Null, string>
+            var result = await producer.ProduceAsync(topic, new Message<Null, string>
             {
                 Value = message
             });

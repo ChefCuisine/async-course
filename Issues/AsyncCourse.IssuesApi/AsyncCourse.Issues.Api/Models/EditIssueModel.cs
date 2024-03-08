@@ -1,14 +1,14 @@
-﻿namespace AsyncCourse.Issues.Api.Models.Issues;
+﻿namespace AsyncCourse.Issues.Api.Models;
 
-public class Issue
+public class EditIssueModel
 {
     public Guid Id { get; set; }
-    
+
     public string Title { get; set; }
     
     public string Description { get; set; }
 
-    public IssueStatus Status { get; set; }
+    public IssueStatusModel Status { get; set; }
     
     public Guid? AssignedToAccountId { get; set; }
 }

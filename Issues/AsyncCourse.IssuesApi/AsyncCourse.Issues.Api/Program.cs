@@ -3,6 +3,7 @@ using AsyncCourse.Core.Service.Domain.Startup;
 using AsyncCourse.Issues.Api.Configuration;
 using AsyncCourse.Issues.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,8 @@ builder.Services
     });
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
 // Add DB settings
 builder.Services.AddAsyncCourseDbSettings<IssuesApiApplicationSettings>();

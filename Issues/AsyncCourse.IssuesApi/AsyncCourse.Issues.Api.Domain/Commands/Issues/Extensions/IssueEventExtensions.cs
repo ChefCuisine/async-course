@@ -36,6 +36,10 @@ public static class IssueEventExtensions
     
     public static MessageBusIssuesEvent GetEventIssueDone(this Issue issue)
     {
+        // todo когда посылается событие "Задача выполнена", то в приницпе
+        // необязательно отправлять всю задачу как контекст, можно только ключевые айдишники для последующей обработки
+        // условно говоря - Status в отправляемом контексте не нужен, потому что есть EventType
+        
         return new MessageBusIssuesEvent
         {
             Type = MessageBusIssuesEventType.IssueDone,

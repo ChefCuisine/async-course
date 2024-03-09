@@ -36,7 +36,7 @@ public static class AuthApiExtensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         return services
-                .AddSingleton<IAccountRepository, AccountRepository>() // account repository
+                .AddSingleton<IAccountRepository, AccountRepository>()
             ;
     }
     

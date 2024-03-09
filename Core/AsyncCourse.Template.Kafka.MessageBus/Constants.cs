@@ -8,8 +8,11 @@ public static class Constants
 
     public const string CustomGroup = "custom-group";
     
-    public const string AccountsStreamTopic = "accounts-stream"; // топик для CUD-событий по аккаунтам
-    public const string AccountsTopic = "accounts"; // топик для BE-событий по аккаунтам
+    // Топики с именем "{domain-model}-stream" - топики для CUD-событий по {domain-model}
+    // Топики с именем "{domain-model}" - топики для BE-событий по {domain-model}
+    
+    public const string AccountsStreamTopic = "accounts-stream";
+    public const string AccountsTopic = "accounts";
 
     public const string IssuesStreamTopic = "issues-stream";
     public const string IssuesTopic = "issues";

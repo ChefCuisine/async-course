@@ -25,10 +25,10 @@ public class AddCommand : IAddCommand
     {
         await accountRepository.AddAsync(account);
 
-        await SendEvents(account);
+        await SendEventsAsync(account);
     }
 
-    private async Task SendEvents(AuthAccount account)
+    private async Task SendEventsAsync(AuthAccount account)
     {
         var streamEventMessage = account
             .GetEventCreated()

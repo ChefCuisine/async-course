@@ -1,6 +1,7 @@
 ﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
 using AsyncCourse.Issues.Api.Domain.Repositories;
+using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
 using AsyncCourse.Issues.Api.Models.Issues;
 using AsyncCourse.Template.Kafka.MessageBus;
 
@@ -33,10 +34,10 @@ public class AddCommand : IAddCommand // todo Role Any
         
         await issueRepository.AddAsync(assignedIssue);
 
-        await SendEvents(assignedIssue);
+        await SendEventsAsync(assignedIssue);
     }
 
-    private async Task SendEvents(Issue assignedIssue)
+    private async Task SendEventsAsync(Issue assignedIssue)
     {
         var streamEventMessage = assignedIssue
             .GetEventCreated()

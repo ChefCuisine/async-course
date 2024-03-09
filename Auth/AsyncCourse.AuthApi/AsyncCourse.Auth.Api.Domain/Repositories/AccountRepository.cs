@@ -5,17 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AsyncCourse.Auth.Api.Domain.Repositories;
 
-public interface IAccountRepository
-{
-    Task<List<AuthAccount>> GetListAsync();
-    
-    Task<AuthAccount> GetByLoginAndPasswordAsync(string email, string password);
-    Task<AuthAccount> GetByIdAsync(Guid id);
-
-    Task AddAsync(AuthAccount account);
-    Task<AuthAccount> EditAsync(EditAuthAccount account);
-}
-
 public class AccountRepository : IAccountRepository
 {
     private readonly AuthApiDbContext authApiDbContext;
@@ -80,6 +69,19 @@ public class AccountRepository : IAccountRepository
         await authApiDbContext.SaveChangesAsync();
         
         return DboToDomain(existingAccount);
+    }
+    
+    public async Task DeleteAsync(Guid id)
+    {
+        var dbo = await authApiDbContext.Accounts.FindAsync(id);
+
+        if (dbo != null)
+        {
+            return;
+        }
+
+        authApiDbContext.Accounts.Remove(dbo);
+        await authApiDbContext.SaveChangesAsync();
     }
 
     #region Mapping

@@ -67,7 +67,7 @@ public static class IssueEventExtensions
     {
         return new MessageBusIssue
         {
-            Id = issue.Id,
+            IssueId = issue.Id,
             Title = issue.Title,
             Description = issue.Description,
             Status = issue.Status.ToString(),

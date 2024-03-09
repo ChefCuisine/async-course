@@ -15,7 +15,7 @@ builder.Services
     .AddCookie(option =>
     {
         option.LoginPath = "/Access/Login";
-        option.ExpireTimeSpan = TimeSpan.FromDays(1);
+        option.ExpireTimeSpan = TimeSpan.FromDays(30);
     });
 
 // Add services to the container.

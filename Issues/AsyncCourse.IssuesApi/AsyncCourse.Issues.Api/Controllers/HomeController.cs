@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues;
-using AsyncCourse.Issues.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using AsyncCourse.Issues.Api.Models;
+using AsyncCourse.Issues.Api.Models.Issues.Models;
+using AsyncCourse.Issues.Api.Models.Mappers;
+using AsyncCourse.Issues.Api.Models.Models;
 
 namespace AsyncCourse.Issues.Api.Controllers;
 
@@ -30,9 +32,7 @@ public class HomeController : Controller
     {
         var result = await getListCommand.GetListAsync();
 
-        var mappedResult = result.Select(IssueMapper.MapFrom).ToArray();
-
-        return View(mappedResult.ToArray());
+        return View(result.ToArray());
     }
     
     // Показываем страницу с добавлением

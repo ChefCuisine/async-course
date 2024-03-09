@@ -63,7 +63,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccount
         {
-            Id = account.Id,
+            AccountId = account.Id,
             Email = account.Email,
             Name = account.Name,
             Surname = account.Surname,

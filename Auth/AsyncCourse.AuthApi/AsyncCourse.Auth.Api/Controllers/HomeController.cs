@@ -3,6 +3,7 @@ using AsyncCourse.Auth.Api.Domain.Commands.Accounts;
 using AsyncCourse.Auth.Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using AsyncCourse.Auth.Api.Models;
+using AsyncCourse.Auth.Api.Models.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;

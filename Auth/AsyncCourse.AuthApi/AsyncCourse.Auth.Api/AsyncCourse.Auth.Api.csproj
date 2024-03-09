@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
+      <TargetFramework>net6.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,12 +15,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Db.Configuration\AsyncCourse.Core.Db.Configuration.csproj" />
-        <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Service.Domain.Startup\AsyncCourse.Core.Service.Domain.Startup.csproj" />
-        <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
-        <ProjectReference Include="..\AsyncCourse.Auth.Api.Db\AsyncCourse.Auth.Api.Db.csproj" />
-        <ProjectReference Include="..\AsyncCourse.Auth.Api.Domain\AsyncCourse.Auth.Api.Domain.csproj" />
-        <ProjectReference Include="..\AsyncCourse.Auth.Api.Models\AsyncCourse.Auth.Api.Models.csproj" />
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Core.Service.Domain.Startup\AsyncCourse.Core.Service.Domain.Startup.csproj" />
+      <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Auth.Api.Domain\AsyncCourse.Auth.Api.Domain.csproj" />
     </ItemGroup>
 
 </Project>

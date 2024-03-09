@@ -52,7 +52,7 @@ IssueAccount MapAccount(MessageBusAccount messageBusAccount)
 {
     return new IssueAccount
     {
-        AccountId = messageBusAccount.Id,
+        AccountId = messageBusAccount.AccountId,
         Email = messageBusAccount.Email,
         Name = messageBusAccount.Name,
         Surname = messageBusAccount.Surname,

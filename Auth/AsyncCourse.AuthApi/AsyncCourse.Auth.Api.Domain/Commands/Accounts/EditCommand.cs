@@ -29,10 +29,10 @@ public class EditCommand : IEditCommand
             return;
         }
 
-        await SendEvents(updatedAccount);
+        await SendEventsAsync(updatedAccount);
     }
 
-    private async Task SendEvents(AuthAccount updatedAccount)
+    private async Task SendEventsAsync(AuthAccount updatedAccount)
     {
         var businessEventMessage = updatedAccount
             .GetEventRoleChanged()

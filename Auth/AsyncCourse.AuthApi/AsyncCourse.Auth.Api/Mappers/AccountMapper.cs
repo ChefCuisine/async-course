@@ -1,5 +1,6 @@
 ﻿using AsyncCourse.Auth.Api.Models;
 using AsyncCourse.Auth.Api.Models.Accounts;
+using AsyncCourse.Auth.Api.Models.Models;
 
 namespace AsyncCourse.Auth.Api.Mappers;
 

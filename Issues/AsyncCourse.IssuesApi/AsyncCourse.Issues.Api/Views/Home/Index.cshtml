@@ -1,4 +1,4 @@
-﻿@model IssueModel[];
+﻿@model AsyncCourse.Issues.Api.Models.Issues.Models.IssueListModel[];
 
 @{
     ViewData["Title"] = "Issues Page";
@@ -21,6 +21,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Status</th>
+            <th>Responsible</th>
         </tr>
         @foreach (var issueModel in Model)
         {
@@ -29,6 +30,7 @@
                 <td>@issueModel.Title</td>
                 <td>@issueModel.Description</td>
                 <td>@issueModel.Status</td>
+                <td>@issueModel.Responsible</td>
             </tr>
         }
     </table>

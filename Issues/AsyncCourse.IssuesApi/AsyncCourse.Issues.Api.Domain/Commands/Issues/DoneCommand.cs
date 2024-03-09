@@ -1,5 +1,6 @@
 ﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
 using AsyncCourse.Issues.Api.Domain.Repositories;
+using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
 using AsyncCourse.Issues.Api.Models.Issues;
 using AsyncCourse.Template.Kafka.MessageBus;
 
@@ -23,12 +24,12 @@ public class DoneCommand : IDoneCommand // todo Role Employee
     
     public async Task DoneAsync(Issue issue)
     {
-        await issueRepository.Update(issue);
+        await issueRepository.UpdateAsync(issue);
 
-        await SendEvents(issue);
+        await SendEventsAsync(issue);
     }
     
-    private async Task SendEvents(Issue issue)
+    private async Task SendEventsAsync(Issue issue)
     {
         var streamEventMessage = issue
             .GetEventDeleted()

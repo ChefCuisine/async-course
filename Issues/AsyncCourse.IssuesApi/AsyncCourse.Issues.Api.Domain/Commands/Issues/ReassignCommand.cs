@@ -1,6 +1,7 @@
 ﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
 using AsyncCourse.Issues.Api.Domain.Repositories;
+using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
 using AsyncCourse.Issues.Api.Models.Issues;
 using AsyncCourse.Template.Kafka.MessageBus;
 
@@ -39,11 +40,11 @@ public class ReassignCommand : IReassignCommand // todo Role Manager
 
         foreach (var assignedIssue in issues) // todo toBatch
         {
-            await SendEvents(assignedIssue);
+            await SendEventsAsync(assignedIssue);
         }
     }
 
-    private async Task SendEvents(Issue assignedIssue)
+    private async Task SendEventsAsync(Issue assignedIssue)
     {
         var businessEventMessage = assignedIssue
             .GetEventIssueReassigned()

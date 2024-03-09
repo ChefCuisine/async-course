@@ -16,7 +16,7 @@ public class IssuesApiClient : RootClientBase, IIssuesApiClient
     {
     }
 
-    public async Task<OperationResult<bool>> SaveAsync(IssueAccount account)
+    public async Task<OperationResult<bool>> SaveAccountAsync(IssueAccount account)
     {
         var request = Request
             .Post("/issues-account/save")
@@ -30,7 +30,7 @@ public class IssuesApiClient : RootClientBase, IIssuesApiClient
         return operationResult;
     }
 
-    public async Task<OperationResult<bool>> UpdateAsync(IssueAccount account)
+    public async Task<OperationResult<bool>> UpdateAccountAsync(IssueAccount account)
     {
         var request = Request
             .Post("/issues-account/update")

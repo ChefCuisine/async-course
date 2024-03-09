@@ -1,4 +1,5 @@
 using AsyncCourse.Accounting.Api.Models.Accounts;
+using AsyncCourse.Accounting.Api.Models.Issues;
 using AsyncCourse.Client;
 using Vostok.Clusterclient.Core;
 using Vostok.Clusterclient.Core.Model;
@@ -16,7 +17,7 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
     {
     }
 
-    public async Task<OperationResult<bool>> SaveAsync(AccountingAccount account)
+    public async Task<OperationResult<bool>> SaveAccountAsync(AccountingAccount account)
     {
         var request = Request
             .Post("/accounting-account/save")
@@ -30,11 +31,53 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
         return operationResult;
     }
 
-    public async Task<OperationResult<bool>> UpdateAsync(AccountingAccount account)
+    public async Task<OperationResult<bool>> UpdateAccountAsync(AccountingAccount account)
     {
         var request = Request
             .Post("/accounting-account/update")
             .WithJsonContent(account);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> SaveIssueAsync(AccountingIssue issue)
+    {
+        var request = Request
+            .Post("/accounting-issue/save")
+            .WithJsonContent(issue);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> ReassignIssueAsync(AccountingBusinessChangedIssue issue)
+    {
+        var request = Request
+            .Post("/accounting-issue/reassign")
+            .WithJsonContent(issue);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+    
+    public async Task<OperationResult<bool>> CloseIssueAsync(AccountingBusinessChangedIssue issue)
+    {
+        var request = Request
+            .Post("/accounting-issue/close")
+            .WithJsonContent(issue);
 
         var operationResult = await SendRequestAsync<bool>(request);
         if (operationResult.IsSuccessful)

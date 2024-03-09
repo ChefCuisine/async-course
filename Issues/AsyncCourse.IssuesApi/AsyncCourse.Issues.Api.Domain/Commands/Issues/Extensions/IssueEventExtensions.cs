@@ -1,4 +1,7 @@
-﻿using AsyncCourse.Issues.Api.Models.Issues;
+﻿using System.Globalization;
+using AsyncCourse.Issues.Api.Models.Issues;
+using AsyncCourse.Template.Kafka.MessageBus;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Issues;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Issues;
 using Newtonsoft.Json;
@@ -13,7 +16,7 @@ public static class IssueEventExtensions
     {
         return new MessageBusIssuesStreamEvent
         {
-            Type = MessageBusIssueStreamEventType.Created,
+            MetaInfo = GetForStreamEvent(MessageBusIssueStreamEventType.Created),
             Context = Map(issue)
         };
     }
@@ -22,7 +25,7 @@ public static class IssueEventExtensions
     {
         return new MessageBusIssuesStreamEvent
         {
-            Type = MessageBusIssueStreamEventType.Deleted,
+            MetaInfo = GetForStreamEvent(MessageBusIssueStreamEventType.Deleted),
             Context = Map(issue)
         };
     }
@@ -36,14 +39,19 @@ public static class IssueEventExtensions
     
     public static MessageBusIssuesEvent GetEventIssueDone(this Issue issue)
     {
-        // todo когда посылается событие "Задача выполнена", то в приницпе
-        // необязательно отправлять всю задачу как контекст, можно только ключевые айдишники для последующей обработки
-        // условно говоря - Status в отправляемом контексте не нужен, потому что есть EventType
-        
         return new MessageBusIssuesEvent
         {
-            Type = MessageBusIssuesEventType.IssueDone,
-            Context = Map(issue)
+            MetaInfo = GetForBusinessEvent(MessageBusIssuesEventType.IssueDone),
+            Context = MapToChanged(issue)
+        };
+    }
+    
+    public static MessageBusIssuesEvent GetEventIssueReassigned(this Issue issue)
+    {
+        return new MessageBusIssuesEvent
+        {
+            MetaInfo = GetForBusinessEvent(MessageBusIssuesEventType.IssueReassigned),
+            Context = MapToChanged(issue)
         };
     }
     
@@ -51,13 +59,34 @@ public static class IssueEventExtensions
     {
         return JsonConvert.SerializeObject(businessEvent);
     }
-    
-    public static MessageBusIssuesEvent GetEventIssueReassigned(this Issue issue)
+
+    // MetaInfo
+
+    private static MessageBusEventMetaInfo GetForStreamEvent(
+        MessageBusIssueStreamEventType eventType,
+        int? version = null)
     {
-        return new MessageBusIssuesEvent
+        return new MessageBusEventMetaInfo
         {
-            Type = MessageBusIssuesEventType.IssueReassigned,
-            Context = Map(issue)
+            EventId = Guid.NewGuid().ToString(),
+            EventType = eventType.ToString(),
+            EventVersion = version ?? 1,
+            EventDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+            ProducerName = Constants.Producers.IssuesStream
+        };
+    }
+    
+    private static MessageBusEventMetaInfo GetForBusinessEvent(
+        MessageBusIssuesEventType eventType,
+        int? version = null)
+    {
+        return new MessageBusEventMetaInfo
+        {
+            EventId = Guid.NewGuid().ToString(),
+            EventType = eventType.ToString(),
+            EventVersion = version ?? 1,
+            EventDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+            ProducerName = Constants.Producers.IssuesBusiness
         };
     }
     
@@ -72,6 +101,15 @@ public static class IssueEventExtensions
             Description = issue.Description,
             Status = issue.Status.ToString(),
             AssignedToAccountId = issue.AssignedToAccountId,
+        };
+    }
+    
+    private static MessageBusBusinessChangedIssue MapToChanged(Issue issue)
+    {
+        return new MessageBusBusinessChangedIssue
+        {
+            IssueId = issue.Id,
+            AssignedToAccountId = issue.AssignedToAccountId
         };
     }
 }

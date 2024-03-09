@@ -3,7 +3,7 @@ using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
 
 namespace AsyncCourse.Issues.Daemon;
 
-public static class IssuesMapper
+public static class AccountMapper
 {
     public static IssueAccount MapAccount(MessageBusAccount messageBusAccount)
     {
@@ -27,5 +27,25 @@ public static class IssuesMapper
                 _ => IssueAccountRole.Unknown
             };
         }
+    }
+
+    public static MessageBusAccountStreamEventType GetStreamType(string type)
+    {
+        return type switch
+        {
+            "Created" => MessageBusAccountStreamEventType.Created,
+            "Updated" => MessageBusAccountStreamEventType.Updated,
+            "Deleted" => MessageBusAccountStreamEventType.Deleted,
+            _ => MessageBusAccountStreamEventType.Unknown
+        };
+    }
+    
+    public static MessageBusAccountsEventType GetBusinessType(string type)
+    {
+        return type switch
+        {
+            "RoleChanged" => MessageBusAccountsEventType.RoleChanged,
+            _ => MessageBusAccountsEventType.Unknown
+        };
     }
 }

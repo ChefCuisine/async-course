@@ -42,11 +42,6 @@ public class AddCommand : IAddCommand // todo Role Any
             .GetEventCreated()
             .ToStreamMessage();
 
-        var businessEventMessage = assignedIssue
-            .GetEventIssueReassigned()
-            .ToBusinessMessage();
-
         await messageBus.SendMessageAsync(Constants.IssuesStreamTopic, streamEventMessage);
-        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
     }
 }

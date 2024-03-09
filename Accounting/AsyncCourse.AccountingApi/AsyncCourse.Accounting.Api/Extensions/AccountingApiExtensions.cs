@@ -1,6 +1,9 @@
 ﻿using AsyncCourse.Accounting.Api.Db;
 using AsyncCourse.Accounting.Api.Domain.Commands.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
+using AsyncCourse.Accounting.Api.Domain.Commands.Issues.Calculator;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
 using AsyncCourse.AccountingApi.Configuration;
 using AsyncCourse.Auth.Api.Client;
 using AsyncCourse.Core.Db.DbContextSupport;
@@ -39,6 +42,7 @@ public static class AccountingApiExtensions
     {
         return services
                 .AddSingleton<IAccountRepository, AccountRepository>()
+                .AddSingleton<IIssueRepository, IssueRepository>()
             ;
     }
     
@@ -47,6 +51,10 @@ public static class AccountingApiExtensions
         return services
                 .AddSingleton<IAddAccountCommand, AddAccountCommand>() // accounting account commands
                 .AddSingleton<IUpdateAccountCommand, UpdateAccountCommand>()
+                .AddSingleton<IAddIssueCommand, AddIssueCommand>() // accounting issue commands
+                .AddSingleton<IReassignIssueCommand, ReassignIssueCommand>()
+                .AddSingleton<ICloseIssueCommand, CloseIssueCommand>()
+                .AddSingleton<IIssueCalculator, IssueCalculator>() // other services using withing commands
             ;
     }
     

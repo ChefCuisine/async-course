@@ -35,15 +35,30 @@ public static class IssueMapper
             Responsible = fullName
         };
     }
+    
+    public static Issue MapFromCreateIssueModel(CreateIssueModel issueModel)
+    {
+        return new Issue
+        {
+            Id =  Guid.NewGuid(),
+            Title = issueModel.Title,
+            Description = issueModel.Description,
+            Status = IssueStatus.Created
+        };
+    }
 
     public static Issue MapFromIssueModel(IssueModel issueModel)
     {
+        var status = issueModel.Status == IssueStatusModel.Unknown 
+            ? IssueStatusModel.Created
+            : issueModel.Status;
+
         return new Issue
         {
             Id = issueModel.Id == Guid.Empty ? Guid.NewGuid() : issueModel.Id,
             Title = issueModel.Title,
             Description = issueModel.Description,
-            Status = MapFromModel(issueModel.Status),
+            Status = MapFromModel(status),
             AssignedToAccountId = issueModel.AssignedToAccountId
         };
     }

@@ -1,5 +1,4 @@
-﻿using AsyncCourse.Issues.Api.Domain.Repositories;
-using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
+﻿using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
 using AsyncCourse.Issues.Api.Models.Accounts;
 using AsyncCourse.Issues.Api.Models.Issues;
@@ -56,6 +55,11 @@ public class IssueAssigner : IIssueAssigner
     {
         var allAccounts = await issueAccountRepository.GetAccountsAsync();
         var allEmployees = allAccounts.Where(x => x.Role == IssueAccountRole.Employee).ToList();
+
+        if (!allEmployees.Any())
+        {
+            return issue;
+        }
 
         var employeeIndex = random.Next(0, allEmployees.Count);
         var employee = allEmployees.ElementAt(employeeIndex);

@@ -6,7 +6,6 @@ using AsyncCourse.Issues.Api.Db;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
 using AsyncCourse.Issues.Api.Domain.Commands.IssuesAccounts;
-using AsyncCourse.Issues.Api.Domain.Repositories;
 using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
 using AsyncCourse.Template.Kafka.MessageBus;

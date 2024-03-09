@@ -1,5 +1,4 @@
-﻿using AsyncCourse.Issues.Api.Domain.Repositories;
-using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
+﻿using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Issues.Api.Models.Accounts;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.IssuesAccounts;

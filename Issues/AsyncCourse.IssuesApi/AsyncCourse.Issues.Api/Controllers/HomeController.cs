@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues;
 using Microsoft.AspNetCore.Mvc;
-using AsyncCourse.Issues.Api.Models;
 using AsyncCourse.Issues.Api.Models.Issues.Models;
 using AsyncCourse.Issues.Api.Models.Mappers;
 using AsyncCourse.Issues.Api.Models.Models;
@@ -39,16 +38,16 @@ public class HomeController : Controller
     public IActionResult Add()
     {
         return View();
-    }   
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Save([FromForm] IssueModel issueModel)
+    public async Task<IActionResult> Create([FromForm] CreateIssueModel createIssueModel)
     {
-        await addCommand.AddAsync(IssueMapper.MapFromIssueModel(issueModel));
+        await addCommand.AddAsync(IssueMapper.MapFromCreateIssueModel(createIssueModel));
 
         return RedirectToAction("Index");
     }
-    
+
     // Показываем редактируемую страницу карточки
     public async Task<IActionResult> Open(Guid id)
     {
@@ -60,7 +59,16 @@ public class HomeController : Controller
 
         return View(IssueMapper.MapFrom(result));
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Save([FromForm] IssueModel issueModel)
+    {
+        await addCommand.AddAsync(IssueMapper.MapFromIssueModel(issueModel));
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
     public async Task Reassign()
     {
         await reassignCommand.Reassign();

@@ -9,13 +9,6 @@ public class IssueModel
     public string Description { get; set; }
 
     public IssueStatusModel Status { get; set; }
-    
-    public Guid? AssignedToAccountId { get; set; }
-}
 
-public enum IssueStatusModel
-{
-    Unknown = 0,
-    Done = 1,
-    Created = 2,
+    public Guid? AssignedToAccountId { get; set; }
 }

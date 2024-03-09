@@ -1,5 +1,5 @@
 ﻿using AsyncCourse.Issues.Api.Client;
-using AsyncCourse.Issues.Api.Models.Accounts;
+using AsyncCourse.Issues.Daemon;
 using AsyncCourse.Template.Kafka.MessageBus;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
@@ -12,63 +12,48 @@ while (true)
 {
     var cancellationToken = new CancellationToken();
 
-    var accountsStreamResult = kafkaBus.Consume<MessageBusAccountStreamEvent>(Constants.AccountsStreamTopic, cancellationToken);
-    if (accountsStreamResult != null)
+    await ProcessStreamEvent();
+    await ProcessBusinessEvent();
+
+    async Task ProcessStreamEvent()
     {
-        switch (accountsStreamResult.Type)
+        var accountsStreamResult = kafkaBus.Consume<MessageBusAccountStreamEvent>(Constants.AccountsStreamTopic, cancellationToken);
+        if (accountsStreamResult != null)
         {
-            case MessageBusAccountStreamEventType.Created:
-                var account = MapAccount(accountsStreamResult.Context);
-                await issuesApiClient.SaveAsync(account);
-                break;
-            case MessageBusAccountStreamEventType.Updated:
-                // todo
-                break;
-            case MessageBusAccountStreamEventType.Deleted:
-                // todo
-                break;
-            case MessageBusAccountStreamEventType.Unknown:
-            default:
-                throw new ArgumentOutOfRangeException();
+            switch (accountsStreamResult.Type)
+            {
+                case MessageBusAccountStreamEventType.Created:
+                    var account = IssuesMapper.MapAccount(accountsStreamResult.Context);
+                    await issuesApiClient.SaveAsync(account);
+                    break;
+                case MessageBusAccountStreamEventType.Updated:
+                    // todo
+                    break;
+                case MessageBusAccountStreamEventType.Deleted:
+                    // todo
+                    break;
+                case MessageBusAccountStreamEventType.Unknown:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 
-    var accountsResult = kafkaBus.Consume<MessageBusAccountsEvent>(Constants.AccountsTopic, cancellationToken);
-    if (accountsResult != null)
+    async Task ProcessBusinessEvent()
     {
-        switch (accountsResult.Type)
+        var accountsResult = kafkaBus.Consume<MessageBusAccountsEvent>(Constants.AccountsTopic, cancellationToken);
+        if (accountsResult != null)
         {
-            case MessageBusAccountsEventType.RoleChanged:
-                await issuesApiClient.UpdateAsync(MapAccount(accountsResult.Context));
-                break;
-            case MessageBusAccountsEventType.Unknown:
-            default:
-                throw new ArgumentOutOfRangeException();
+            switch (accountsResult.Type)
+            {
+                case MessageBusAccountsEventType.RoleChanged:
+                    var account = IssuesMapper.MapAccount(accountsResult.Context);
+                    await issuesApiClient.UpdateAsync(account);
+                    break;
+                case MessageBusAccountsEventType.Unknown:
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
-
-IssueAccount MapAccount(MessageBusAccount messageBusAccount)
-{
-    return new IssueAccount
-    {
-        AccountId = messageBusAccount.AccountId,
-        Email = messageBusAccount.Email,
-        Name = messageBusAccount.Name,
-        Surname = messageBusAccount.Surname,
-        Role = Map(messageBusAccount.Role)
-    };
-
-    IssueAccountRole Map(string role)
-    {
-        return role switch
-        {
-            "Employee" => IssueAccountRole.Employee,
-            "Administrator" => IssueAccountRole.Administrator,
-            "Manager" => IssueAccountRole.Manager,
-            "Accountant" => IssueAccountRole.Accountant,
-            _ => IssueAccountRole.Unknown
-        };
-    }
-}
-

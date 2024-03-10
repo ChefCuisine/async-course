@@ -12,6 +12,8 @@ public class IssueOutboxEvent
     
     public string Title { get; set; }
     
+    public string JiraId { get; set; }
+    
     public string Description { get; set; }
 
     public string IssueStatus { get; set; }

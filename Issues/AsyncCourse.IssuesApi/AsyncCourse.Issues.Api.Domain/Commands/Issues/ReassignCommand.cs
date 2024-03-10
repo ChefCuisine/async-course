@@ -42,16 +42,6 @@ public class ReassignCommand : IReassignCommand // todo Role Manager
 
     private static IssueOutboxEvent MapToReassignEvent(Issue issue)
     {
-        return new IssueOutboxEvent
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now,
-            Type = IssueOutboxEventType.Reassigned,
-            IssueId = issue.Id,
-            Title = issue.Title,
-            Description = issue.Description,
-            IssueStatus = issue.Status.ToString(),
-            AssignedToAccountId = issue.AssignedToAccountId
-        };
+        return IssueOutboxEventCreator.Create(issue, IssueOutboxEventType.Reassigned);
     }
 }

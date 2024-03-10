@@ -98,6 +98,7 @@ public static class IssueOutboxEventExtensions
         {
             IssueId = issue.IssueId,
             Title = issue.Title,
+            JiraId = issue.JiraId,
             Description = issue.Description,
             Status = issue.IssueStatus,
             AssignedToAccountId = issue.AssignedToAccountId,

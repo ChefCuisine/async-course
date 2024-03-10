@@ -12,6 +12,7 @@ public static class IssueMapper
         {
             IssueId = messageBusIssue.IssueId,
             Title = messageBusIssue.Title,
+            JiraId = messageBusIssue.JiraId,
             Description = messageBusIssue.Description,
             Status = Map(messageBusIssue.Status),
             AssignedToAccountId = messageBusIssue.AssignedToAccountId

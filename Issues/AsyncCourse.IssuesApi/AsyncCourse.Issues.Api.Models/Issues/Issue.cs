@@ -6,6 +6,8 @@ public class Issue
     
     public string Title { get; set; }
     
+    public string JiraId { get; set; }
+    
     public string Description { get; set; }
 
     public IssueStatus Status { get; set; }

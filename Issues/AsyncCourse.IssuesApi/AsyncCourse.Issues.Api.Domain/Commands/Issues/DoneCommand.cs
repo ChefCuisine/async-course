@@ -25,17 +25,7 @@ public class DoneCommand : IDoneCommand // todo Role Employee
     {
         await issueRepository.UpdateAsync(issue);
         
-        var issueEvent = new IssueOutboxEvent
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now,
-            Type = IssueOutboxEventType.Done,
-            IssueId = issue.Id,
-            Title = issue.Title,
-            Description = issue.Description,
-            IssueStatus = issue.Status.ToString(),
-            AssignedToAccountId = issue.AssignedToAccountId
-        };
+        var issueEvent = IssueOutboxEventCreator.Create(issue, IssueOutboxEventType.Done);
         await issueOutboxEventRepository.AddAsync(issueEvent);
     }
 }

@@ -87,6 +87,11 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<string>("JiraId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("jira_id");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");

@@ -3,6 +3,7 @@ using System;
 using AsyncCourse.Issues.Api.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AsyncCourse.Issues.Api.Db.Migrations
 {
     [DbContext(typeof(IssuesApiDbContext))]
-    partial class IssuesApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240310105737_Add_IssueJiraId")]
+    partial class Add_IssueJiraId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -33,17 +33,7 @@ public class AddCommand : IAddCommand // todo Role Any
         
         await issueRepository.AddAsync(assignedIssue);
 
-        var issueEvent = new IssueOutboxEvent
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.Now,
-            Type = IssueOutboxEventType.Created,
-            IssueId = assignedIssue.Id,
-            Title = assignedIssue.Title,
-            Description = assignedIssue.Description,
-            IssueStatus = assignedIssue.Status.ToString(),
-            AssignedToAccountId = assignedIssue.AssignedToAccountId
-        };
+        var issueEvent = IssueOutboxEventCreator.Create(assignedIssue, IssueOutboxEventType.Created);
         await issueOutboxEventRepository.AddAsync(issueEvent);
     }
 }

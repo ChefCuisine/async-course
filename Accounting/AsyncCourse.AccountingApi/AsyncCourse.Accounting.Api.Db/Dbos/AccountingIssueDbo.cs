@@ -12,6 +12,9 @@ public class AccountingIssueDbo
     [Column("title")]
     public string Title { get; set; }
     
+    [Column("jira_id")]
+    public string JiraId { get; set; }
+    
     [Column("description")]
     public string Description { get; set; }
     

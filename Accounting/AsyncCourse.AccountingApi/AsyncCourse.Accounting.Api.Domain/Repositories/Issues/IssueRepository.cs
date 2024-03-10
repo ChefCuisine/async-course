@@ -94,6 +94,7 @@ public class IssueRepository : IIssueRepository
         {
             IssueId = issue.IssueId == Guid.Empty ? Guid.NewGuid() : issue.IssueId,
             Title = issue.Title,
+            JiraId = issue.JiraId,
             Description = issue.Description,
             Status = issue.Status == AccountingIssueStatus.Unknown ? AccountingIssueStatus.Created : issue.Status,
             AssignedToAccountId = issue.AssignedToAccountId,
@@ -106,6 +107,7 @@ public class IssueRepository : IIssueRepository
         {
             IssueId = dbo.IssueId,
             Title = dbo.Title,
+            JiraId = dbo.JiraId,
             Description = dbo.Description,
             Status = dbo.Status,
             AssignedToAccountId = dbo.AssignedToAccountId,

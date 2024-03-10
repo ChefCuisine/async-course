@@ -61,8 +61,10 @@ public class IssueRepository : IIssueRepository
         {
             existingIssue.Status = issue.Status;
         }
-        
-        // todo поменяли заголовок, описание, ответственного
+
+        existingIssue.AssignedToAccountId = issue.AssignedToAccountId;
+        existingIssue.Title = issue.Title;
+        existingIssue.Description = issue.Description;
 
         accountingApiDbContext.Issues.Update(existingIssue);
 

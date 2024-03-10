@@ -13,18 +13,8 @@ public static class IssueMapper
             Title = messageBusIssue.Title,
             Description = messageBusIssue.Description,
             Status = Map(messageBusIssue.Status),
-            AssignedToAccountId = null
+            AssignedToAccountId = messageBusIssue.AssignedToAccountId
         };
-
-        AccountingIssueStatus Map(string status)
-        {
-            return status switch
-            {
-                "Done" => AccountingIssueStatus.Done,
-                "Created" => AccountingIssueStatus.Created,
-                _ => AccountingIssueStatus.Unknown
-            };
-        }
     }
 
     public static AccountingBusinessChangedIssue MapBusinessChangedIssue(MessageBusBusinessChangedIssue changedIssue)
@@ -54,6 +44,16 @@ public static class IssueMapper
             "IssueDone" => MessageBusIssuesEventType.IssueDone,
             "IssueReassigned" => MessageBusIssuesEventType.IssueReassigned,
             _ => MessageBusIssuesEventType.Unknown
+        };
+    }
+    
+    private static AccountingIssueStatus Map(string status)
+    {
+        return status switch
+        {
+            "Done" => AccountingIssueStatus.Done,
+            "Created" => AccountingIssueStatus.Created,
+            _ => AccountingIssueStatus.Unknown
         };
     }
 }

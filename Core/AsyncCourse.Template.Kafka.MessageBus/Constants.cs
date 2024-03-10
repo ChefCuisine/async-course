@@ -16,6 +16,9 @@ public static class Constants
 
     public const string IssuesStreamTopic = "issues-stream";
     public const string IssuesTopic = "issues";
+    
+    public const string TransactionsStreamTopic = "transactions-stream";
+    public const string TransactionsTopic = "transactions";
 
     public static class Producers
     {
@@ -23,5 +26,7 @@ public static class Constants
         public const string AccountsBusiness = "AccountsBusinessProducer";
         public const string IssuesStream = "IssuesStreamProducer";
         public const string IssuesBusiness = "IssuesBusinessProducer";
+        public const string TransactionsStream = "TransactionsStreamProducer";
+        public const string TransactionsBusiness = "TransactionsBusinessProducer";
     }
 }

@@ -34,7 +34,7 @@ public class AccountingIssueController : Controller
     [HttpPost("reassign")]
     public async Task<bool> Reassign(AccountingBusinessChangedIssue changedIssue)
     {
-        await reassignIssueCommand.ReassingAsync(changedIssue);
+        await reassignIssueCommand.ReassignAsync(changedIssue);
 
         return true;
     }

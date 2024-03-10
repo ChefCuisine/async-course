@@ -76,8 +76,7 @@ public class TransactionOutboxEventRepository : ITransactionOutboxEventRepositor
             Id = transactionEvent.Id == Guid.Empty ? Guid.NewGuid() : transactionEvent.Id,
             CreatedAt = transactionEvent.CreatedAt,
             Type = transactionEvent.Type,
-            TransactionId = transactionEvent.TransactionId,
-            // todo
+            TransactionId = transactionEvent.TransactionId
         };
     }
 
@@ -88,8 +87,7 @@ public class TransactionOutboxEventRepository : ITransactionOutboxEventRepositor
             Id = dbo.Id,
             CreatedAt = dbo.CreatedAt,
             Type = dbo.Type,
-            TransactionId = dbo.TransactionId, 
-            // todo
+            TransactionId = dbo.TransactionId
         };
     }
 

@@ -15,9 +15,7 @@ public class CloseIssueCommand : ICloseIssueCommand
     private readonly IIssueRepository issueRepository;
     private readonly ITransactionsCreator transactionsCreator;
 
-    public CloseIssueCommand(
-        IIssueRepository issueRepository,
-        ITransactionsCreator transactionsCreator)
+    public CloseIssueCommand(IIssueRepository issueRepository, ITransactionsCreator transactionsCreator)
     {
         this.issueRepository = issueRepository;
         this.transactionsCreator = transactionsCreator;

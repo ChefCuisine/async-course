@@ -1,6 +1,4 @@
-﻿using AsyncCourse.Accounting.Api.Domain.Commands.Accounts;
-using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
-using AsyncCourse.Accounting.Api.Models.Accounts;
+﻿using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
 using AsyncCourse.Accounting.Api.Models.Issues;
 using Microsoft.AspNetCore.Mvc;
 

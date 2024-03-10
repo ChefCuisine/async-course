@@ -30,17 +30,17 @@ public class AccountsHanler
         var metaInfo = streamResult.MetaInfo;
         switch (AccountMapper.GetStreamType(metaInfo.EventType))
         {
-            case MessageBusAccountStreamEventType.Created:
+            case MessageBusStreamEventType.Created:
                 var account = AccountMapper.MapAccount(streamResult.Context);
                 await accountingApiClient.SaveAccountAsync(account);
                 break;
-            case MessageBusAccountStreamEventType.Updated:
+            case MessageBusStreamEventType.Updated:
                 // todo
                 break;
-            case MessageBusAccountStreamEventType.Deleted:
+            case MessageBusStreamEventType.Deleted:
                 // todo
                 break;
-            case MessageBusAccountStreamEventType.Unknown:
+            case MessageBusStreamEventType.Unknown:
             default:
                 throw new ArgumentOutOfRangeException();
         }

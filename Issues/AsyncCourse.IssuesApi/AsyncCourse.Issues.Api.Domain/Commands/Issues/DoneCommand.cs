@@ -1,7 +1,7 @@
-﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
-using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
+﻿using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
+using AsyncCourse.Issues.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Issues.Api.Models.Issues;
-using AsyncCourse.Template.Kafka.MessageBus;
+using AsyncCourse.Issues.Api.Models.OutboxEvents;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.Issues;
 
@@ -13,32 +13,29 @@ public interface IDoneCommand
 public class DoneCommand : IDoneCommand // todo Role Employee
 {
     private readonly IIssueRepository issueRepository;
-    private readonly ITemlateKafkaMessageBus messageBus;
+    private readonly IIssueOutboxEventRepository issueOutboxEventRepository;
     
-    public DoneCommand(IIssueRepository issueRepository, ITemlateKafkaMessageBus messageBus)
+    public DoneCommand(IIssueRepository issueRepository, IIssueOutboxEventRepository issueOutboxEventRepository)
     {
         this.issueRepository = issueRepository;
-        this.messageBus = messageBus;
+        this.issueOutboxEventRepository = issueOutboxEventRepository;
     }
     
     public async Task DoneAsync(Issue issue)
     {
         await issueRepository.UpdateAsync(issue);
-
-        await SendEventsAsync(issue);
-    }
-    
-    private async Task SendEventsAsync(Issue issue)
-    {
-        var streamEventMessage = issue
-            .GetEventDeleted()
-            .ToStreamMessage();
-
-        var businessEventMessage = issue
-            .GetEventIssueDone()
-            .ToBusinessMessage();
-
-        await messageBus.SendMessageAsync(Constants.IssuesStreamTopic, streamEventMessage);
-        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
+        
+        var issueEvent = new IssueOutboxEvent
+        {
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.Now,
+            Type = IssueOutboxEventType.Done,
+            IssueId = issue.Id,
+            Title = issue.Title,
+            Description = issue.Description,
+            IssueStatus = issue.Status.ToString(),
+            AssignedToAccountId = issue.AssignedToAccountId
+        };
+        await issueOutboxEventRepository.AddAsync(issueEvent);
     }
 }

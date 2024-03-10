@@ -1,5 +1,6 @@
 using AsyncCourse.Accounting.Api.Models.Accounts;
 using AsyncCourse.Accounting.Api.Models.Issues;
+using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Client;
 using Vostok.Clusterclient.Core;
 using Vostok.Clusterclient.Core.Model;
@@ -78,6 +79,46 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
         var request = Request
             .Post("/accounting-issue/close")
             .WithJsonContent(issue);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+    
+    public async Task<OperationResult<TransactionOutboxEvent>> ReadTransactionEventAsync()
+    {
+        var request = Request
+            .Get("/transactions-event/read-one");
+
+        var operationResult = await SendRequestAsync<TransactionOutboxEvent>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> DeleteTransactionEventAsync(Guid id)
+    {
+        var request = Request
+            .Delete($"/transactions-event/delete/{id}");
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> UpdateBalanceAsync(Guid id)
+    {
+        var request = Request
+            .Post("/accounting-balance/update")
+            .WithAdditionalQueryParameter("transactionId", id);
 
         var operationResult = await SendRequestAsync<bool>(request);
         if (operationResult.IsSuccessful)

@@ -1,31 +1,31 @@
 ﻿using System.Globalization;
-using AsyncCourse.Issues.Api.Models.Issues;
+using AsyncCourse.Issues.Api.Models.OutboxEvents;
 using AsyncCourse.Template.Kafka.MessageBus;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Issues;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Issues;
 using Newtonsoft.Json;
 
-namespace AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
+namespace AsyncCourse.Issues.DaemonProducer.Extensions;
 
-public static class IssueEventExtensions
+public static class IssueOutboxEventExtensions
 {
     // CUD-events
     
-    public static MessageBusIssuesStreamEvent GetEventCreated(this Issue issue)
+    public static MessageBusIssuesStreamEvent GetEventCreated(this IssueOutboxEvent issue)
     {
         return new MessageBusIssuesStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusIssueStreamEventType.Created),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Created),
             Context = Map(issue)
         };
     }
     
-    public static MessageBusIssuesStreamEvent GetEventDeleted(this Issue issue)
+    public static MessageBusIssuesStreamEvent GetEventDeleted(this IssueOutboxEvent issue)
     {
         return new MessageBusIssuesStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusIssueStreamEventType.Deleted),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Deleted),
             Context = Map(issue)
         };
     }
@@ -37,7 +37,7 @@ public static class IssueEventExtensions
 
     // Business events
     
-    public static MessageBusIssuesEvent GetEventIssueDone(this Issue issue)
+    public static MessageBusIssuesEvent GetEventIssueDone(this IssueOutboxEvent issue)
     {
         return new MessageBusIssuesEvent
         {
@@ -46,7 +46,7 @@ public static class IssueEventExtensions
         };
     }
     
-    public static MessageBusIssuesEvent GetEventIssueReassigned(this Issue issue)
+    public static MessageBusIssuesEvent GetEventIssueReassigned(this IssueOutboxEvent issue)
     {
         return new MessageBusIssuesEvent
         {
@@ -63,7 +63,7 @@ public static class IssueEventExtensions
     // MetaInfo
 
     private static MessageBusEventMetaInfo GetForStreamEvent(
-        MessageBusIssueStreamEventType eventType,
+        MessageBusStreamEventType eventType,
         int? version = null)
     {
         return new MessageBusEventMetaInfo
@@ -92,23 +92,23 @@ public static class IssueEventExtensions
     
     // Mapping
     
-    private static MessageBusIssue Map(Issue issue)
+    private static MessageBusIssue Map(IssueOutboxEvent issue)
     {
         return new MessageBusIssue
         {
-            IssueId = issue.Id,
+            IssueId = issue.IssueId,
             Title = issue.Title,
             Description = issue.Description,
-            Status = issue.Status.ToString(),
+            Status = issue.IssueStatus,
             AssignedToAccountId = issue.AssignedToAccountId,
         };
     }
     
-    private static MessageBusBusinessChangedIssue MapToChanged(Issue issue)
+    private static MessageBusBusinessChangedIssue MapToChanged(IssueOutboxEvent issue)
     {
         return new MessageBusBusinessChangedIssue
         {
-            IssueId = issue.Id,
+            IssueId = issue.IssueId,
             AssignedToAccountId = issue.AssignedToAccountId
         };
     }

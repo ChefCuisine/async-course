@@ -22,6 +22,8 @@ public class AccountingApiDbContext : DbContext
     [NotNull] public DbSet<AccountingAccountDbo> Accounts { get; set; }
     [NotNull] public DbSet<AccountingIssueDbo> Issues { get; set; }
     [NotNull] public DbSet<TransactionDbo> Transactions { get; set; }
+    [NotNull] public DbSet<TransactionOutboxEventDbo> TransactionEvents { get; set; }
+    [NotNull] public DbSet<AccountBalanceDbo> AccountBalances { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -39,5 +41,11 @@ public class AccountingApiDbContext : DbContext
         
         var issueDbos = modelBuilder.Entity<AccountingIssueDbo>();
         issueDbos.HasKey(x => x.IssueId);
+        
+        var transactionEventsDbos = modelBuilder.Entity<TransactionOutboxEventDbo>();
+        transactionEventsDbos.HasKey(x => x.Id);
+        
+        var accountBalanceDbos = modelBuilder.Entity<AccountBalanceDbo>();
+        accountBalanceDbos.HasKey(x => x.AccountId);
     }
 }

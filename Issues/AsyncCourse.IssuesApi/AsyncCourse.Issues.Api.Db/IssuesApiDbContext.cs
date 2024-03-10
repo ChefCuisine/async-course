@@ -21,6 +21,7 @@ public class IssuesApiDbContext : DbContext
 
     [NotNull] public DbSet<IssueDbo> Issues { get; set; }
     [NotNull] public DbSet<IssueAccountDbo> Accounts { get; set; }
+    [NotNull] public DbSet<IssueOutboxEventDbo> IssueEvents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -35,5 +36,8 @@ public class IssuesApiDbContext : DbContext
         
         var accountDbos = modelBuilder.Entity<IssueAccountDbo>();
         accountDbos.HasKey(x => x.AccountId);
+        
+        var issueEventDbos = modelBuilder.Entity<IssueOutboxEventDbo>();
+        issueEventDbos.HasKey(x => x.Id);
     }
 }

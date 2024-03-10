@@ -16,7 +16,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusAccountStreamEventType.Created),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Created),
             Context = Map(account)
         };
     }
@@ -25,7 +25,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusAccountStreamEventType.Updated),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Updated),
             Context = Map(account)
         };
     }
@@ -34,7 +34,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusAccountStreamEventType.Deleted),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Deleted),
             Context = Map(account)
         };
     }
@@ -63,7 +63,7 @@ public static class AuthAccountEventExtensions
     // MetaInfo
 
     private static MessageBusEventMetaInfo GetForStreamEvent(
-        MessageBusAccountStreamEventType eventType,
+        MessageBusStreamEventType eventType,
         int? version = null)
     {
         return new MessageBusEventMetaInfo

@@ -1,4 +1,5 @@
 ﻿using AsyncCourse.Accounting.Api.Models.Issues;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Issues;
 
 namespace AsyncCourse.Accounting.IssuesDaemon;
@@ -26,14 +27,14 @@ public static class IssueMapper
         };
     }
 
-    public static MessageBusIssueStreamEventType GetStreamType(string type)
+    public static MessageBusStreamEventType GetStreamType(string type)
     {
         return type switch
         {
-            "Created" => MessageBusIssueStreamEventType.Created,
-            "Updated" => MessageBusIssueStreamEventType.Updated,
-            "Deleted" => MessageBusIssueStreamEventType.Deleted,
-            _ => MessageBusIssueStreamEventType.Unknown
+            "Created" => MessageBusStreamEventType.Created,
+            "Updated" => MessageBusStreamEventType.Updated,
+            "Deleted" => MessageBusStreamEventType.Deleted,
+            _ => MessageBusStreamEventType.Unknown
         };
     }
     

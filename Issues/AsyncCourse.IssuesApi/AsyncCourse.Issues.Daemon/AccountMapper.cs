@@ -1,5 +1,6 @@
 ﻿using AsyncCourse.Issues.Api.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 
 namespace AsyncCourse.Issues.Daemon;
 
@@ -29,14 +30,14 @@ public static class AccountMapper
         }
     }
 
-    public static MessageBusAccountStreamEventType GetStreamType(string type)
+    public static MessageBusStreamEventType GetStreamType(string type)
     {
         return type switch
         {
-            "Created" => MessageBusAccountStreamEventType.Created,
-            "Updated" => MessageBusAccountStreamEventType.Updated,
-            "Deleted" => MessageBusAccountStreamEventType.Deleted,
-            _ => MessageBusAccountStreamEventType.Unknown
+            "Created" => MessageBusStreamEventType.Created,
+            "Updated" => MessageBusStreamEventType.Updated,
+            "Deleted" => MessageBusStreamEventType.Deleted,
+            _ => MessageBusStreamEventType.Unknown
         };
     }
     

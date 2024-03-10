@@ -1,22 +1,22 @@
 ﻿using System.Globalization;
-using AsyncCourse.Accounting.Api.Models.Transactions;
+using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Template.Kafka.MessageBus;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Transactions;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Transactions;
 using Newtonsoft.Json;
 
-namespace AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Extensions;
+namespace AsyncCourse.Accounting.DaemonProducer.Extensions;
 
-public static class TransactionEventExtensions
+public static class TransactionOutboxEventExtensions
 {
     // CUD-events
     
-    public static MessageBusTransactionsStreamEvent GetEventCreated(this Transaction transaction)
+    public static MessageBusTransactionsStreamEvent GetEventCreated(this TransactionOutboxEvent transaction)
     {
         return new MessageBusTransactionsStreamEvent
         {
-            MetaInfo = GetForStreamEvent(MessageBusTransactionStreamEventType.Created),
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Created),
             Context = Map(transaction)
         };
     }
@@ -31,7 +31,7 @@ public static class TransactionEventExtensions
     // MetaInfo
     
     private static MessageBusEventMetaInfo GetForStreamEvent(
-        MessageBusTransactionStreamEventType eventType,
+        MessageBusStreamEventType eventType,
         int? version = null)
     {
         return new MessageBusEventMetaInfo
@@ -46,11 +46,11 @@ public static class TransactionEventExtensions
     
     // Mapping
 
-    private static MessageBusTransaction Map(Transaction transaction)
+    private static MessageBusTransaction Map(TransactionOutboxEvent transactionEvent)
     {
         return new MessageBusTransaction
         {
-            TransactionId = transaction.Id
+            TransactionId = transactionEvent.TransactionId
         };
     }
 }

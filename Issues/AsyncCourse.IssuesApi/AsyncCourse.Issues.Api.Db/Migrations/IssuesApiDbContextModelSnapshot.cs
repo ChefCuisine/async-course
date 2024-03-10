@@ -80,6 +80,48 @@ namespace AsyncCourse.Issues.Api.Db.Migrations
 
                     b.ToTable("issues");
                 });
+
+            modelBuilder.Entity("AsyncCourse.Issues.Api.Db.Dbos.IssueOutboxEventDbo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AssignedToAccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("assigned_to_accound_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("date")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<Guid>("IssueId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("issue_id");
+
+                    b.Property<string>("IssueStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("issue-events");
+                });
 #pragma warning restore 612, 618
         }
     }

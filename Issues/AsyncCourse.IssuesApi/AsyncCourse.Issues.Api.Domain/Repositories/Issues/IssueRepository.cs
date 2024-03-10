@@ -70,6 +70,14 @@ public class IssueRepository : IIssueRepository
         
         return DboToDomain(existingIssue);
     }
+    
+    public async Task UpdateBatchAsync(IEnumerable<Issue> issues)
+    {
+        var mappedDbos = issues.Select(DomainToDbo);
+        issuesApiDbContext.Issues.UpdateRange(mappedDbos);
+
+        await issuesApiDbContext.SaveChangesAsync();
+    }
 
     public async Task DeleteAsync(Guid id)
     {

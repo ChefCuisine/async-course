@@ -32,16 +32,16 @@ public class IssuesHanler
 
         switch (IssueMapper.GetStreamType(metaInfo.EventType))
         {
-            case MessageBusIssueStreamEventType.Created:
+            case MessageBusStreamEventType.Created:
                 await accountingApiClient.SaveIssueAsync(issue);
                 break;
-            case MessageBusIssueStreamEventType.Updated:
+            case MessageBusStreamEventType.Updated:
                 // todo
                 break;
-            case MessageBusIssueStreamEventType.Deleted:
+            case MessageBusStreamEventType.Deleted:
                 // todo
                 break;
-            case MessageBusIssueStreamEventType.Unknown:
+            case MessageBusStreamEventType.Unknown:
             default:
                 throw new ArgumentOutOfRangeException();
         }

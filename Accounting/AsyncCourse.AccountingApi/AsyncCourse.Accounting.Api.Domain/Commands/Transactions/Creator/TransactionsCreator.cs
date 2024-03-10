@@ -1,8 +1,8 @@
 ﻿using AsyncCourse.Accounting.Api.Domain.Commands.Issues.Calculator;
-using AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Extensions;
+using AsyncCourse.Accounting.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Transactions;
+using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Accounting.Api.Models.Transactions;
-using AsyncCourse.Template.Kafka.MessageBus;
 
 namespace AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Creator;
 
@@ -15,16 +15,16 @@ public class TransactionsCreator : ITransactionsCreator
 {
     private readonly IIssueCalculator issueCalculator;
     private readonly ITransactionRepository transactionRepository;
-    private readonly ITemlateKafkaMessageBus messageBus;
+    private readonly ITransactionOutboxEventRepository transactionOutboxEventRepository;
 
     public TransactionsCreator(
         IIssueCalculator issueCalculator,
         ITransactionRepository transactionRepository,
-        ITemlateKafkaMessageBus messageBus)
+        ITransactionOutboxEventRepository transactionOutboxEventRepository)
     {
         this.issueCalculator = issueCalculator;
         this.transactionRepository = transactionRepository;
-        this.messageBus = messageBus;
+        this.transactionOutboxEventRepository = transactionOutboxEventRepository;
     }
 
     public async Task CreateAsync(TransactionType transactionType, Guid issueId, Guid? assignedToAccountId)
@@ -46,12 +46,19 @@ public class TransactionsCreator : ITransactionsCreator
                 IssueId = issueId,
                 AssignToAccountId = assignedToAccountId.Value
             },
-            Amount = price
+            Amount = price.Value
         };
         
         await transactionRepository.AddAsync(transaction);
-
-        await SendEventsAsync(transaction);
+        
+        var transactionEvent = new TransactionOutboxEvent
+        {
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.Now,
+            Type = MapType(transactionType),
+            TransactionId = transaction.Id
+        };
+        await transactionOutboxEventRepository.AddAsync(transactionEvent);
     }
 
     private decimal? GetPrice(TransactionType transactionType)
@@ -68,13 +75,18 @@ public class TransactionsCreator : ITransactionsCreator
 
         return null;
     }
-    
-    private async Task SendEventsAsync(Transaction transaction)
-    {
-        var streamEventMessage = transaction
-            .GetEventCreated()
-            .ToStreamMessage();
 
-        await messageBus.SendMessageAsync(Constants.TransactionsStreamTopic, streamEventMessage);
+    private static TransactionOutboxEventType MapType(TransactionType transactionType)
+    {
+        switch (transactionType)
+        {
+            case TransactionType.IssueAssigned:
+                return TransactionOutboxEventType.RemoveMoney;
+            case TransactionType.IssueDone:
+                return TransactionOutboxEventType.AddMoney;
+            case TransactionType.Unknown:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(transactionType), transactionType, null);
+        }
     }
 }

@@ -9,6 +9,6 @@ public class AccountingIssue
     public string Description { get; set; }
 
     public AccountingIssueStatus Status { get; set; }
-    
+
     public Guid? AssignedToAccountId { get; set; }
 }

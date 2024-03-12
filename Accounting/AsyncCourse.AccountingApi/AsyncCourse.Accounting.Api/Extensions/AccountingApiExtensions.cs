@@ -4,7 +4,6 @@ using AsyncCourse.Accounting.Api.Domain.Commands.Balances;
 using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
 using AsyncCourse.Accounting.Api.Domain.Commands.Issues.Calculator;
 using AsyncCourse.Accounting.Api.Domain.Commands.OutboxEvents;
-using AsyncCourse.Accounting.Api.Domain.Commands.Transactions;
 using AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Creator;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Balances;
@@ -18,7 +17,7 @@ using AsyncCourse.Core.WarmUp;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Microsoft.EntityFrameworkCore.Design;
 using Newtonsoft.Json;
-using Vostok.Logging.Abstractions;
+using Vostok.Logging.Console;
 
 namespace AsyncCourse.AccountingApi.Extensions;
 
@@ -76,7 +75,7 @@ public static class AccountingApiExtensions
     {
         return services.AddSingleton<IAuthApiClient>(_ => 
             {
-                return new AuthApiClient(AuthApiLocalAddress.Get(), new SilentLog());
+                return new AuthApiClient(AuthApiLocalAddress.Get(), new ConsoleLog());
             })
             ;
     }

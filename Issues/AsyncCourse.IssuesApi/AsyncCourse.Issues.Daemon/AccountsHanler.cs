@@ -4,6 +4,7 @@ using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
 using Vostok.Logging.Abstractions;
+using Vostok.Logging.Console;
 
 namespace AsyncCourse.Issues.Daemon;
 
@@ -15,7 +16,9 @@ public class AccountsHanler
     public AccountsHanler()
     {
         kafkaBus = new TemlateKafkaMessageBus();
-        issuesApiClient = new IssuesApiClient(IssuesApiLocalAddress.Get(), new CompositeLog());
+        issuesApiClient = new IssuesApiClient(
+            IssuesApiLocalAddress.Get(),
+            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
     }
 
     public async Task ProcessStreamEvent(CancellationToken cancellationToken)

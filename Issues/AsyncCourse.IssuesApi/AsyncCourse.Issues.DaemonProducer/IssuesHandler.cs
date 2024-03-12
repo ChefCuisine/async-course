@@ -3,6 +3,7 @@ using AsyncCourse.Issues.Api.Models.OutboxEvents;
 using AsyncCourse.Issues.DaemonProducer.Extensions;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Vostok.Logging.Abstractions;
+using Vostok.Logging.Console;
 
 namespace AsyncCourse.Issues.DaemonProducer;
 
@@ -14,7 +15,9 @@ public class IssuesHandler
     public IssuesHandler()
     {
         kafkaBus = new TemlateKafkaMessageBus();
-        issuesApiClient = new IssuesApiClient(IssuesApiLocalAddress.Get(), new CompositeLog());
+        issuesApiClient = new IssuesApiClient(
+            IssuesApiLocalAddress.Get(),
+            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
     }
     
     public async Task ProduceEvent()

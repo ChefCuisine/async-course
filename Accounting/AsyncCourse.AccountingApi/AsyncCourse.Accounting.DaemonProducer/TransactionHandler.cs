@@ -3,6 +3,7 @@ using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Accounting.DaemonProducer.Extensions;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Vostok.Logging.Abstractions;
+using Vostok.Logging.Console;
 
 namespace AsyncCourse.Accounting.DaemonProducer;
 
@@ -14,7 +15,9 @@ public class TransactionHandler
     public TransactionHandler()
     {
         kafkaBus = new TemlateKafkaMessageBus();
-        accountingApiClient = new AccountingApiClient(AccountingApiLocalAddress.Get(), new CompositeLog());
+        accountingApiClient = new AccountingApiClient(
+            AccountingApiLocalAddress.Get(),
+            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
     }
     
     public async Task ProduceEvent()

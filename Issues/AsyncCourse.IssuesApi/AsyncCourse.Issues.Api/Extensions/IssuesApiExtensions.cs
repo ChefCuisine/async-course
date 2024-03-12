@@ -13,7 +13,7 @@ using AsyncCourse.Issues.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Microsoft.EntityFrameworkCore.Design;
 using Newtonsoft.Json;
-using Vostok.Logging.Abstractions;
+using Vostok.Logging.Console;
 
 namespace AsyncCourse.Issues.Api.Extensions;
 
@@ -69,7 +69,7 @@ public static class IssuesApiExtensions
     {
         return services.AddSingleton<IAuthApiClient>(_ => 
             {
-                return new AuthApiClient(AuthApiLocalAddress.Get(), new SilentLog());
+                return new AuthApiClient(AuthApiLocalAddress.Get(), new ConsoleLog());
             })
             ;
     }

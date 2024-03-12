@@ -11,6 +11,7 @@ public static class IssueMapper
         {
             Id = issue.Id,
             Title = issue.Title,
+            JiraId = issue.JiraId,
             Description = issue.Description,
             Status = MapToModel(issue.Status),
             AssignedToAccountId = issue.AssignedToAccountId
@@ -38,6 +39,7 @@ public static class IssueMapper
     
     public static Issue MapFromCreateIssueModel(CreateIssueModel issueModel)
     {
+        // если содержит [,] - то выделить содержимое в JiraId
         return new Issue
         {
             Id =  Guid.NewGuid(),
@@ -52,11 +54,14 @@ public static class IssueMapper
         var status = issueModel.Status == IssueStatusModel.Unknown 
             ? IssueStatusModel.Created
             : issueModel.Status;
+        
+        // todo проверить Title на наличие [], вырезать все что внутри [] и записать как JiraId
 
         return new Issue
         {
             Id = issueModel.Id == Guid.Empty ? Guid.NewGuid() : issueModel.Id,
             Title = issueModel.Title,
+            JiraId = issueModel.JiraId,
             Description = issueModel.Description,
             Status = MapFromModel(status),
             AssignedToAccountId = issueModel.AssignedToAccountId

@@ -1,5 +1,8 @@
-﻿using AsyncCourse.Auth.Api.Models.Accounts;
+﻿using System.Globalization;
+using AsyncCourse.Auth.Api.Models.Accounts;
+using AsyncCourse.Template.Kafka.MessageBus;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
 using Newtonsoft.Json;
 
@@ -13,7 +16,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            Type = MessageBusAccountStreamEventType.Created,
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Created),
             Context = Map(account)
         };
     }
@@ -22,7 +25,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            Type = MessageBusAccountStreamEventType.Updated,
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Updated),
             Context = Map(account)
         };
     }
@@ -31,7 +34,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountStreamEvent
         {
-            Type = MessageBusAccountStreamEventType.Deleted,
+            MetaInfo = GetForStreamEvent(MessageBusStreamEventType.Deleted),
             Context = Map(account)
         };
     }
@@ -47,7 +50,7 @@ public static class AuthAccountEventExtensions
     {
         return new MessageBusAccountsEvent
         {
-            Type = MessageBusAccountsEventType.RoleChanged,
+            MetaInfo = GetForBusinessEvent(MessageBusAccountsEventType.RoleChanged),
             Context = Map(account)
         };
     }
@@ -55,6 +58,36 @@ public static class AuthAccountEventExtensions
     public static string ToBusinessMessage(this MessageBusAccountsEvent businessEvent)
     {
         return JsonConvert.SerializeObject(businessEvent);
+    }
+
+    // MetaInfo
+
+    private static MessageBusEventMetaInfo GetForStreamEvent(
+        MessageBusStreamEventType eventType,
+        int? version = null)
+    {
+        return new MessageBusEventMetaInfo
+        {
+            EventId = Guid.NewGuid().ToString(),
+            EventType = eventType.ToString(),
+            EventVersion = version ?? 1,
+            EventDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+            ProducerName = Constants.Producers.AccountsStream
+        };
+    }
+    
+    private static MessageBusEventMetaInfo GetForBusinessEvent(
+        MessageBusAccountsEventType eventType,
+        int? version = null)
+    {
+        return new MessageBusEventMetaInfo
+        {
+            EventId = Guid.NewGuid().ToString(),
+            EventType = eventType.ToString(),
+            EventVersion = version ?? 1,
+            EventDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+            ProducerName = Constants.Producers.AccountsBusiness
+        };
     }
     
     // Mapping

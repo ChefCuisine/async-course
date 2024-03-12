@@ -1,8 +1,8 @@
 ﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
-using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
 using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
+using AsyncCourse.Issues.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Issues.Api.Models.Issues;
-using AsyncCourse.Template.Kafka.MessageBus;
+using AsyncCourse.Issues.Api.Models.OutboxEvents;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.Issues;
 
@@ -15,16 +15,16 @@ public class ReassignCommand : IReassignCommand // todo Role Manager
 {
     private readonly IIssueAssigner issueAssigner;
     private readonly IIssueRepository issueRepository;
-    private readonly ITemlateKafkaMessageBus messageBus;
+    private readonly IIssueOutboxEventRepository issueOutboxEventRepository;
 
     public ReassignCommand(
         IIssueAssigner issueAssigner,
         IIssueRepository issueRepository,
-        ITemlateKafkaMessageBus messageBus)
+        IIssueOutboxEventRepository issueOutboxEventRepository)
     {
         this.issueAssigner = issueAssigner;
         this.issueRepository = issueRepository;
-        this.messageBus = messageBus;
+        this.issueOutboxEventRepository = issueOutboxEventRepository;
     }
 
     public async Task Reassign()
@@ -35,20 +35,13 @@ public class ReassignCommand : IReassignCommand // todo Role Manager
             return;
         }
 
-        await issueRepository.AddBatchAsync(issues);
+        await issueRepository.UpdateBatchAsync(issues);
 
-        foreach (var assignedIssue in issues) // todo toBatch
-        {
-            await SendEventsAsync(assignedIssue);
-        }
+        await issueOutboxEventRepository.AddBatchAsync(issues.Select(MapToReassignEvent));
     }
 
-    private async Task SendEventsAsync(Issue assignedIssue)
+    private static IssueOutboxEvent MapToReassignEvent(Issue issue)
     {
-        var businessEventMessage = assignedIssue
-            .GetEventIssueReassigned()
-            .ToBusinessMessage();
-
-        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
+        return IssueOutboxEventCreator.Create(issue, IssueOutboxEventType.Reassigned);
     }
 }

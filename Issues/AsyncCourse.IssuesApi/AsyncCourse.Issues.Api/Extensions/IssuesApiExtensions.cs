@@ -6,8 +6,10 @@ using AsyncCourse.Issues.Api.Db;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues;
 using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
 using AsyncCourse.Issues.Api.Domain.Commands.IssuesAccounts;
+using AsyncCourse.Issues.Api.Domain.Commands.OutboxEvents;
 using AsyncCourse.Issues.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
+using AsyncCourse.Issues.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Template.Kafka.MessageBus;
 using Microsoft.EntityFrameworkCore.Design;
 using Newtonsoft.Json;
@@ -43,6 +45,7 @@ public static class IssuesApiExtensions
         return services
                 .AddSingleton<IIssueRepository, IssueRepository>()
                 .AddSingleton<IIssueAccountRepository, IssueAccountRepository>()
+                .AddSingleton<IIssueOutboxEventRepository, IssueOutboxEventRepository>()
             ;
     }
     
@@ -56,6 +59,8 @@ public static class IssuesApiExtensions
             .AddSingleton<IReassignCommand, ReassignCommand>()
             .AddSingleton<IAddIssueAccountCommand, AddIssueAccountCommand>() // issues account commands
             .AddSingleton<IUpdateIssueAccountCommand, UpdateIssueAccountCommand>()
+            .AddSingleton<IReadOneIssueOutboxEventCommand, ReadOneIssueOutboxEventIssueOutboxEventCommand>() // issues event commands
+            .AddSingleton<IRemoveIssueOutboxEventCommand, RemoveIssueOutboxEventIssueOutboxEventCommand>()
             .AddSingleton<IIssueAssigner, IssueAssigner>() // other services using withing commands
             ;
     }

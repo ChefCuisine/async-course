@@ -1,6 +1,16 @@
 ﻿using AsyncCourse.Accounting.Api.Db;
 using AsyncCourse.Accounting.Api.Domain.Commands.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Commands.Balances;
+using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
+using AsyncCourse.Accounting.Api.Domain.Commands.Issues.Calculator;
+using AsyncCourse.Accounting.Api.Domain.Commands.OutboxEvents;
+using AsyncCourse.Accounting.Api.Domain.Commands.Transactions;
+using AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Creator;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Balances;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
+using AsyncCourse.Accounting.Api.Domain.Repositories.OutboxEvents;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Transactions;
 using AsyncCourse.AccountingApi.Configuration;
 using AsyncCourse.Auth.Api.Client;
 using AsyncCourse.Core.Db.DbContextSupport;
@@ -39,6 +49,10 @@ public static class AccountingApiExtensions
     {
         return services
                 .AddSingleton<IAccountRepository, AccountRepository>()
+                .AddSingleton<IIssueRepository, IssueRepository>()
+                .AddSingleton<ITransactionRepository, TransactionRepository>()
+                .AddSingleton<ITransactionOutboxEventRepository, TransactionOutboxEventRepository>()
+                .AddSingleton<IAccountBalanceRepository, AccountBalanceRepository>()
             ;
     }
     
@@ -47,6 +61,14 @@ public static class AccountingApiExtensions
         return services
                 .AddSingleton<IAddAccountCommand, AddAccountCommand>() // accounting account commands
                 .AddSingleton<IUpdateAccountCommand, UpdateAccountCommand>()
+                .AddSingleton<IAddIssueCommand, AddIssueCommand>() // accounting issue commands
+                .AddSingleton<IReassignIssueCommand, ReassignIssueCommand>()
+                .AddSingleton<ICloseIssueCommand, CloseIssueCommand>()
+                .AddSingleton<IUpdateBalanceCommand, UpdateBalanceCommand>() // balance commands
+                .AddSingleton<IReadOneTransactionOutboxEventCommand, ReadOneTransactionOutboxEventCommand>() // transaction event commands
+                .AddSingleton<IRemoveTransactionOutboxEventCommand, RemoveTransactionOutboxEventCommand>()
+                .AddSingleton<IIssueCalculator, IssueCalculator>() // other services using within commands
+                .AddSingleton<ITransactionsCreator, TransactionsCreator>()
             ;
     }
     

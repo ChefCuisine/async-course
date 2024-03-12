@@ -1,4 +1,7 @@
 ﻿using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Newtonsoft.Json;
 
 namespace AsyncCourse.Template.Kafka.MessageBus;
@@ -11,6 +14,9 @@ public interface ITemlateKafkaMessageBus
 
 public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
 {
+    private static readonly SchemaRegistryConfig config = new SchemaRegistryConfig { MaxCachedSchemas = 1000 };
+    private readonly CachedSchemaRegistryClient schemaRegistryClient = new CachedSchemaRegistryClient(config);
+    
     // todo вероятнее всего можно отправлять в кафку батчем, нужно узнать как и переписать метод чтоб принимал массив
     public async Task<DeliveryResult<Null, string>> SendMessageAsync(string topic, string message)
     {
@@ -21,7 +27,9 @@ public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
                 BootstrapServers = Constants.BootstrapServer,
                 // ClientId = Dns.GetHostName()
             };
-            using var producer = new ProducerBuilder<Null, string>(producerConfig).Build();
+            using var producer = new ProducerBuilder<Null, string>(producerConfig)
+                .SetValueSerializer(new AvroSerializer<string>(schemaRegistryClient))
+                .Build();
             var result = await producer.ProduceAsync(topic, new Message<Null, string>
             {
                 Value = message
@@ -47,7 +55,10 @@ public class TemlateKafkaMessageBus : ITemlateKafkaMessageBus
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
-            using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+            var deserializer = new SyncOverAsyncDeserializer<string>(new AvroDeserializer<string>(schemaRegistryClient));
+            using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig)
+                .SetValueDeserializer(deserializer)
+                .Build();
             consumer.Subscribe(topic);
 
             try

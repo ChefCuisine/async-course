@@ -2,8 +2,7 @@
 
 namespace AsyncCourse.Template.Kafka.MessageBus.Models.Events.Issues;
 
-public class MessageBusIssuesStreamEvent
+public class MessageBusIssuesStreamEvent : MessageBusEvent
 {
-    public MessageBusIssueStreamEventType Type { get; set; }
     public MessageBusIssue Context { get; set; }
 }

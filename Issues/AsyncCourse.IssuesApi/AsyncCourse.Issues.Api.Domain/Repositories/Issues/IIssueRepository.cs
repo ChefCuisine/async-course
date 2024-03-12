@@ -14,5 +14,7 @@ public interface IIssueRepository
 
     Task<Issue> UpdateAsync(Issue issue);
 
+    Task UpdateBatchAsync(IEnumerable<Issue> issues);
+
     Task DeleteAsync(Guid id);
 }

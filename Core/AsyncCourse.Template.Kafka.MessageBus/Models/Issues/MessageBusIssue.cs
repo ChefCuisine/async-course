@@ -4,6 +4,7 @@ public class MessageBusIssue
 {
     public Guid IssueId { get; set; }
     public string Title { get; set; }
+    public string JiraId { get; set; }
     public string Description { get; set; }
     public string Status { get; set; }
     public Guid? AssignedToAccountId { get; set; }

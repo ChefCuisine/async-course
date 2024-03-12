@@ -1,8 +1,8 @@
 ﻿using AsyncCourse.Issues.Api.Domain.Commands.Issues.Assigner;
-using AsyncCourse.Issues.Api.Domain.Commands.Issues.Extensions;
 using AsyncCourse.Issues.Api.Domain.Repositories.Issues;
+using AsyncCourse.Issues.Api.Domain.Repositories.OutboxEvents;
 using AsyncCourse.Issues.Api.Models.Issues;
-using AsyncCourse.Template.Kafka.MessageBus;
+using AsyncCourse.Issues.Api.Models.OutboxEvents;
 
 namespace AsyncCourse.Issues.Api.Domain.Commands.Issues;
 
@@ -15,16 +15,16 @@ public class AddCommand : IAddCommand // todo Role Any
 {
     private readonly IIssueAssigner issueAssigner;
     private readonly IIssueRepository issueRepository;
-    private readonly ITemlateKafkaMessageBus messageBus;
+    private readonly IIssueOutboxEventRepository issueOutboxEventRepository;
 
     public AddCommand(
         IIssueAssigner issueAssigner,
         IIssueRepository issueRepository,
-        ITemlateKafkaMessageBus messageBus)
+        IIssueOutboxEventRepository issueOutboxEventRepository)
     {
         this.issueAssigner = issueAssigner;
         this.issueRepository = issueRepository;
-        this.messageBus = messageBus;
+        this.issueOutboxEventRepository = issueOutboxEventRepository;
     }
 
     public async Task AddAsync(Issue issue)
@@ -33,20 +33,7 @@ public class AddCommand : IAddCommand // todo Role Any
         
         await issueRepository.AddAsync(assignedIssue);
 
-        await SendEventsAsync(assignedIssue);
-    }
-
-    private async Task SendEventsAsync(Issue assignedIssue)
-    {
-        var streamEventMessage = assignedIssue
-            .GetEventCreated()
-            .ToStreamMessage();
-
-        var businessEventMessage = assignedIssue
-            .GetEventIssueReassigned()
-            .ToBusinessMessage();
-
-        await messageBus.SendMessageAsync(Constants.IssuesStreamTopic, streamEventMessage);
-        await messageBus.SendMessageAsync(Constants.IssuesTopic, businessEventMessage);
+        var issueEvent = IssueOutboxEventCreator.Create(assignedIssue, IssueOutboxEventType.Created);
+        await issueOutboxEventRepository.AddAsync(issueEvent);
     }
 }

@@ -1,4 +1,4 @@
-﻿using AsyncCourse.Issues.Daemon;
+﻿using AsyncCourse.Issues.AccountsDaemonConsumer;
 
 var accountsHandler = new AccountsHanler();
 

@@ -1,4 +1,4 @@
-﻿using AsyncCourse.Accounting.AccountsDaemon;
+﻿using AsyncCourse.Accounting.AccountsDaemonConsumer;
 
 var accountsHandler = new AccountsHanler();
 

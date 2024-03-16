@@ -1,4 +1,4 @@
-﻿using AsyncCourse.Accounting.IssuesDaemon;
+﻿using AsyncCourse.Accounting.IssuesDaemonConsumer;
 
 var issuesHandler = new IssuesHanler();
 

@@ -2,7 +2,7 @@
 using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 
-namespace AsyncCourse.Issues.Daemon;
+namespace AsyncCourse.Issues.AccountsDaemonConsumer;
 
 public static class AccountMapper
 {

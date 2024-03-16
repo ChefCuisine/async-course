@@ -1,6 +1,6 @@
 ﻿using AsyncCourse.Accounting.DaemonProducer;
 
-var transactionHandler = new TransactionHandler();
+var transactionHandler = new TransactionsHandler();
 
 while (true)
 {

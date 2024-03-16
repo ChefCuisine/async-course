@@ -6,7 +6,7 @@ using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Console;
 
-namespace AsyncCourse.Issues.Daemon;
+namespace AsyncCourse.Issues.AccountsDaemonConsumer;
 
 public class AccountsHanler
 {

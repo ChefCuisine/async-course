@@ -7,13 +7,13 @@ using Vostok.Logging.Console;
 
 namespace AsyncCourse.Accounting.DaemonProducer;
 
-public class TransactionHandler
+public class TransactionsHandler
 {
     private readonly ITemlateKafkaMessageBus kafkaBus;
     private readonly IAccountingApiClient accountingApiClient;
     private readonly ILog log;
 
-    public TransactionHandler()
+    public TransactionsHandler()
     {
         log = new ConsoleLog().WithMinimumLevel(LogLevel.Info);
         kafkaBus = new TemlateKafkaMessageBus();

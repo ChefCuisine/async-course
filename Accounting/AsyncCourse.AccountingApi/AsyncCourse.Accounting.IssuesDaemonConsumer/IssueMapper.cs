@@ -2,7 +2,7 @@
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Issues;
 
-namespace AsyncCourse.Accounting.IssuesDaemon;
+namespace AsyncCourse.Accounting.IssuesDaemonConsumer;
 
 public static class IssueMapper
 {

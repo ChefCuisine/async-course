@@ -25,12 +25,6 @@ public class CloseIssueCommand : ICloseIssueCommand
     {
         var issue = await issueRepository.GetAsync(changedIssue.IssueId);
 
-        if (issue.AssignedToAccountId == changedIssue.AssignedToAccountId)
-        {
-            return;
-        }
-
-        issue.AssignedToAccountId = changedIssue.AssignedToAccountId;
         issue.Status = AccountingIssueStatus.Done;
 
         await issueRepository.UpdateAsync(issue);

@@ -11,13 +11,13 @@ public class IssuesHandler
 {
     private readonly ITemlateKafkaMessageBus kafkaBus;
     private readonly IIssuesApiClient issuesApiClient;
+    private readonly ILog log;
     
     public IssuesHandler()
     {
+        log = new ConsoleLog().WithMinimumLevel(LogLevel.Info);
         kafkaBus = new TemlateKafkaMessageBus();
-        issuesApiClient = new IssuesApiClient(
-            IssuesApiLocalAddress.Get(),
-            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
+        issuesApiClient = new IssuesApiClient(IssuesApiLocalAddress.Get(), log);
     }
     
     public async Task ProduceEvent()
@@ -25,6 +25,7 @@ public class IssuesHandler
         var nextEventResult = await issuesApiClient.ReadIssueEventAsync();
         if (!nextEventResult.IsSuccessful)
         {
+            log.Info("...");
             return;
         }
 
@@ -37,7 +38,7 @@ public class IssuesHandler
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            log.Error(e);
             throw;
         }
     }
@@ -49,6 +50,11 @@ public class IssuesHandler
             return;
         }
         
+        // todo
+        // возможно стоит переработать идею:
+        // то что задача создалась и сменился ответственный - это и stream- и BE-событие
+        // обработав stream-event - мы получим в соответствующей БД нужный слепок Issue (и все)
+        // обработав business-event - мы создадим нужную транзакцию (и все)
         switch (issueEvent.Type)
         {
             case IssueOutboxEventType.Created:

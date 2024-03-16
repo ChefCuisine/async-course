@@ -38,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{65
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Auth.Api.Client", "..\..\Auth\AsyncCourse.AuthApi\AsyncCourse.Auth.Api.Client\AsyncCourse.Auth.Api.Client.csproj", "{940EADBD-356B-4D6B-8034-F033CA5B5F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Issues.Daemon", "AsyncCourse.Issues.Daemon\AsyncCourse.Issues.Daemon.csproj", "{7004A11B-5E14-497E-A0FF-7AA71E89724C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Issues.AccountsDaemonConsumer", "AsyncCourse.Issues.AccountsDaemonConsumer\AsyncCourse.Issues.AccountsDaemonConsumer.csproj", "{7004A11B-5E14-497E-A0FF-7AA71E89724C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Issues.Api.Client", "AsyncCourse.Issues.Api.Client\AsyncCourse.Issues.Api.Client.csproj", "{399E3FAE-FBCB-4C89-99A1-703DAD9B2256}"
 EndProject

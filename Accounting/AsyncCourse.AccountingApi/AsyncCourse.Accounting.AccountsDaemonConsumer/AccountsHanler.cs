@@ -12,13 +12,13 @@ public class AccountsHanler
 {
     private readonly ITemlateKafkaMessageBus kafkaBus;
     private readonly IAccountingApiClient accountingApiClient;
+    private readonly ILog log;
 
     public AccountsHanler()
     {
+        log = new ConsoleLog().WithMinimumLevel(LogLevel.Info);
         kafkaBus = new TemlateKafkaMessageBus();
-        accountingApiClient = new AccountingApiClient(
-            AccountingApiLocalAddress.Get(), 
-            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
+        accountingApiClient = new AccountingApiClient(AccountingApiLocalAddress.Get(), log);
     }
 
     public async Task ProcessStreamEvent(CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class AccountsHanler
         var streamResult = ConsumeEvent<MessageBusAccountStreamEvent>(Constants.AccountsStreamTopic, cancellationToken);
         if (streamResult == null)
         {
-            // todo add log
+            log.Error("..."); // todo add log
             return;
         }
 
@@ -54,6 +54,7 @@ public class AccountsHanler
         var businessResult = ConsumeEvent<MessageBusAccountsEvent>(Constants.AccountsTopic, cancellationToken);
         if (businessResult == null)
         {
+            log.Error("..."); // todo add log
             return;
         }
 

@@ -61,7 +61,7 @@ public static class IssuesApiExtensions
             .AddSingleton<IUpdateIssueAccountCommand, UpdateIssueAccountCommand>()
             .AddSingleton<IReadOneIssueOutboxEventCommand, ReadOneIssueOutboxEventIssueOutboxEventCommand>() // issues event commands
             .AddSingleton<IRemoveIssueOutboxEventCommand, RemoveIssueOutboxEventIssueOutboxEventCommand>()
-            .AddSingleton<IIssueAssigner, IssueAssigner>() // other services using withing commands
+            .AddSingleton<IIssueAssigner, IssueAssigner>() // other services using within commands
             ;
     }
     

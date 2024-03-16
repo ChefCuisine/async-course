@@ -1,41 +1,42 @@
-﻿using AsyncCourse.Issues.Api.Client;
+﻿using AsyncCourse.Accounting.Api.Client;
 using AsyncCourse.Template.Kafka.MessageBus;
-using AsyncCourse.Template.Kafka.MessageBus.Models.Accounts;
 using AsyncCourse.Template.Kafka.MessageBus.Models.Events;
-using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Accounts;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Events.Issues;
+using AsyncCourse.Template.Kafka.MessageBus.Models.Issues;
 using Vostok.Logging.Abstractions;
 using Vostok.Logging.Console;
 
-namespace AsyncCourse.Issues.Daemon;
+namespace AsyncCourse.Accounting.IssuesDaemon;
 
-public class AccountsHanler
+public class IssuesHanler
 {
     private readonly ITemlateKafkaMessageBus kafkaBus;
-    private readonly IIssuesApiClient issuesApiClient;
+    private readonly IAccountingApiClient accountingApiClient;
+    private readonly ILog log;
 
-    public AccountsHanler()
+    public IssuesHanler()
     {
+        log = new ConsoleLog().WithMinimumLevel(LogLevel.Info);
         kafkaBus = new TemlateKafkaMessageBus();
-        issuesApiClient = new IssuesApiClient(
-            IssuesApiLocalAddress.Get(),
-            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
+        accountingApiClient = new AccountingApiClient(AccountingApiLocalAddress.Get(), log);
     }
 
     public async Task ProcessStreamEvent(CancellationToken cancellationToken)
     {
-        var streamResult = ConsumeEvent<MessageBusAccountStreamEvent>(Constants.AccountsStreamTopic, cancellationToken);
+        var streamResult = ConsumeEvent<MessageBusIssuesStreamEvent>(Constants.IssuesStreamTopic, cancellationToken);
         if (streamResult == null)
         {
-            // todo add log
+            log.Error("..."); // todo add log
             return;
         }
 
         var metaInfo = streamResult.MetaInfo;
-        switch (AccountMapper.GetStreamType(metaInfo.EventType))
+        var issue = IssueMapper.MapIssue(streamResult.Context);
+
+        switch (IssueMapper.GetStreamType(metaInfo.EventType))
         {
             case MessageBusStreamEventType.Created:
-                var account = AccountMapper.MapAccount(streamResult.Context);
-                await issuesApiClient.SaveAccountAsync(account);
+                await accountingApiClient.SaveIssueAsync(issue);
                 break;
             case MessageBusStreamEventType.Updated:
                 // todo
@@ -51,21 +52,25 @@ public class AccountsHanler
 
     public async Task ProcessBusinessEvent(CancellationToken cancellationToken)
     {
-        var businessResult = ConsumeEvent<MessageBusAccountsEvent>(Constants.AccountsTopic, cancellationToken);
+        var businessResult = ConsumeEvent<MessageBusIssuesEvent>(Constants.IssuesTopic, cancellationToken);
         if (businessResult == null)
         {
-            // todo add log
+            log.Error("..."); // todo add log
             return;
         }
 
         var metaInfo = businessResult.MetaInfo;
-        switch (AccountMapper.GetBusinessType(metaInfo.EventType))
+        var changedIssue = IssueMapper.MapBusinessChangedIssue(businessResult.Context);
+
+        switch (IssueMapper.GetBusinessType(metaInfo.EventType))
         {
-            case MessageBusAccountsEventType.RoleChanged:
-                var account = AccountMapper.MapAccount(businessResult.Context);
-                await issuesApiClient.UpdateAccountAsync(account);
+            case MessageBusIssuesEventType.IssueDone:
+                await accountingApiClient.CloseIssueAsync(changedIssue);
                 break;
-            case MessageBusAccountsEventType.Unknown:
+            case MessageBusIssuesEventType.IssueReassigned:
+                await accountingApiClient.ReassignIssueAsync(changedIssue);
+                break;
+            case MessageBusIssuesEventType.Unknown:
             default:
                 throw new ArgumentOutOfRangeException();
         }

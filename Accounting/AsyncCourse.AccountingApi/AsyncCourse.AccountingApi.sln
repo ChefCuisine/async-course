@@ -40,9 +40,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.Api.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.Api.Client", "AsyncCourse.Accounting.Api.Client\AsyncCourse.Accounting.Api.Client.csproj", "{815818B1-5703-4B63-A2AD-B87A36582873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.AccountsDaemon", "AsyncCourse.Accounting.AccountsDaemon\AsyncCourse.Accounting.AccountsDaemon.csproj", "{E69227C2-878F-4CCB-B3CD-18AFFA3EAC16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.AccountsDaemonConsumer", "AsyncCourse.Accounting.AccountsDaemonConsumer\AsyncCourse.Accounting.AccountsDaemonConsumer.csproj", "{E69227C2-878F-4CCB-B3CD-18AFFA3EAC16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.IssuesDaemon", "AsyncCourse.Accounting.IssuesDaemon\AsyncCourse.Accounting.IssuesDaemon.csproj", "{20E7C580-3E8D-412F-BEDB-17AEEC870E8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCourse.Accounting.IssuesDaemonConsumer", "AsyncCourse.Accounting.IssuesDaemonConsumer\AsyncCourse.Accounting.IssuesDaemonConsumer.csproj", "{20E7C580-3E8D-412F-BEDB-17AEEC870E8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Daemons", "Daemons", "{627AE90E-EAA4-4CE7-8DCD-E77C03B03050}"
 EndProject

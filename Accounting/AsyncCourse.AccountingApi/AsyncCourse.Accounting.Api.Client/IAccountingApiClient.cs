@@ -5,7 +5,7 @@ using AsyncCourse.Client;
 
 namespace AsyncCourse.Accounting.Api.Client;
 
-public interface IAccountingApiClient
+public interface IAccountingApiClient // todo поменять bool на вменяемый ответ
 {
     Task<OperationResult<bool>> SaveAccountAsync(AccountingAccount account);
     Task<OperationResult<bool>> UpdateAccountAsync(AccountingAccount account);

@@ -11,13 +11,13 @@ public class TransactionHandler
 {
     private readonly ITemlateKafkaMessageBus kafkaBus;
     private readonly IAccountingApiClient accountingApiClient;
+    private readonly ILog log;
 
     public TransactionHandler()
     {
+        log = new ConsoleLog().WithMinimumLevel(LogLevel.Info);
         kafkaBus = new TemlateKafkaMessageBus();
-        accountingApiClient = new AccountingApiClient(
-            AccountingApiLocalAddress.Get(),
-            new ConsoleLog().WithMinimumLevel(LogLevel.Info));
+        accountingApiClient = new AccountingApiClient(AccountingApiLocalAddress.Get(), log);
     }
     
     public async Task ProduceEvent()
@@ -25,6 +25,7 @@ public class TransactionHandler
         var nextEventResult = await accountingApiClient.ReadTransactionEventAsync();
         if (!nextEventResult.IsSuccessful)
         {
+            log.Error("...");
             return;
         }
 
@@ -37,7 +38,7 @@ public class TransactionHandler
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            log.Error(e);
             throw;
         }
     }

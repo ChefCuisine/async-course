@@ -5,12 +5,13 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>AsyncCourse.Accounting.IssuesDaemon</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Core\AsyncCourse.Template.Kafka.MessageBus\AsyncCourse.Template.Kafka.MessageBus.csproj" />
-      <ProjectReference Include="..\AsyncCourse.Issues.Api.Client\AsyncCourse.Issues.Api.Client.csproj" />
-      <ProjectReference Include="..\AsyncCourse.Issues.Api.Models\AsyncCourse.Issues.Api.Models.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Accounting.Api.Client\AsyncCourse.Accounting.Api.Client.csproj" />
+      <ProjectReference Include="..\AsyncCourse.Accounting.Api.Models\AsyncCourse.Accounting.Api.Models.csproj" />
     </ItemGroup>
 
 </Project>

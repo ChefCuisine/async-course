@@ -4,7 +4,7 @@ using AsyncCourse.Issues.Api.Models.OutboxEvents;
 
 namespace AsyncCourse.Issues.Api.Client;
 
-public interface IIssuesApiClient
+public interface IIssuesApiClient // todo поменять bool на вменяемый ответ
 {
     Task<OperationResult<bool>> SaveAccountAsync(IssueAccount account);
     Task<OperationResult<bool>> UpdateAccountAsync(IssueAccount account);

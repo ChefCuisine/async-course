@@ -1,5 +1,8 @@
 ﻿using AsyncCourse.Accounting.Api.Domain.Commands.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Commands.Balances;
 using AsyncCourse.Accounting.Api.Models.Accounts;
+using AsyncCourse.Accounting.Api.Models.Balances.Models;
+using AsyncCourse.Accounting.Api.Models.Mappings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncCourse.AccountingApi.Controllers;
@@ -9,13 +12,19 @@ public class AccountingAccountController : Controller
 {
     private readonly IAddAccountCommand addAccountCommand;
     private readonly IUpdateAccountCommand updateAccountCommand;
+    private readonly IGetBalanceCommand getBalanceCommand;
+    private readonly IGetManagementBalanceCommand getManagementBalanceCommand;
 
     public AccountingAccountController(
         IAddAccountCommand addAccountCommand,
-        IUpdateAccountCommand updateAccountCommand)
+        IUpdateAccountCommand updateAccountCommand,
+        IGetBalanceCommand getBalanceCommand,
+        IGetManagementBalanceCommand getManagementBalanceCommand)
     {
         this.addAccountCommand = addAccountCommand;
         this.updateAccountCommand = updateAccountCommand;
+        this.getBalanceCommand = getBalanceCommand;
+        this.getManagementBalanceCommand = getManagementBalanceCommand;
     }
     
     [HttpPost("save")]
@@ -32,5 +41,29 @@ public class AccountingAccountController : Controller
         await updateAccountCommand.UpdateAsync(account);
 
         return true;
+    }
+    
+    // dashboard methods
+    
+    [HttpGet("show-by-id")]
+    public async Task<AccountBalanceInfoModel> ShowById([FromQuery] Guid accountId)
+    {
+        // должен показать какой на сегодня баланс
+        // + лог операций
+        var result = await getBalanceCommand.GetBalanceAsync(accountId);
+        
+        return AccountBalanceMapping.MapFromDomainResult(result);
+    }
+    
+    // authorize только для админов и бухгалтеров
+    [HttpGet("show")]
+    public async Task<ManagementBalanceInfoModel> Show([FromQuery] Guid accountId, int statDays)
+    {
+        // количество заработанных топ-менеджментом за сегодня денег
+        // + статистика по дням
+        
+        var result = await getManagementBalanceCommand.GetBalanceAsync(accountId);
+        
+        return AccountBalanceMapping.MapFromDomainResult(result);
     }
 }

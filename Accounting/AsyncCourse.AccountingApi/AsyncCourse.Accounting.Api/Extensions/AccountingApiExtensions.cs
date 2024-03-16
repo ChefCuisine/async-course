@@ -64,6 +64,8 @@ public static class AccountingApiExtensions
                 .AddSingleton<IReassignIssueCommand, ReassignIssueCommand>()
                 .AddSingleton<ICloseIssueCommand, CloseIssueCommand>()
                 .AddSingleton<IUpdateBalanceCommand, UpdateBalanceCommand>() // balance commands
+                .AddSingleton<IGetBalanceCommand, GetBalanceCommand>()
+                .AddSingleton<IGetManagementBalanceCommand, GetManagementBalanceCommand>()
                 .AddSingleton<IReadOneTransactionOutboxEventCommand, ReadOneTransactionOutboxEventCommand>() // transaction event commands
                 .AddSingleton<IRemoveTransactionOutboxEventCommand, RemoveTransactionOutboxEventCommand>()
                 .AddSingleton<IIssueCalculator, IssueCalculator>() // other services using within commands

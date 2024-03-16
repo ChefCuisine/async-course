@@ -14,6 +14,18 @@ public class AccountRepository : IAccountRepository
         accountingApiDbContext = contextFactory.CreateDbContext();
     }
 
+    public async Task<AccountingAccount> GetAsync(Guid id)
+    {
+        var dbo = await accountingApiDbContext.Accounts.FindAsync(id);
+
+        if (dbo != null)
+        {
+            return DboToDomain(dbo);
+        }
+
+        return null;
+    }
+
     public async Task CreateAsync(AccountingAccount account)
     {
         await accountingApiDbContext.Accounts.AddAsync(DomainToDbo(account));

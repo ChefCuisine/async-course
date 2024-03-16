@@ -46,6 +46,8 @@ public class AccountingApiDbContext : DbContext
         transactionEventsDbos.HasKey(x => x.Id);
         
         var accountBalanceDbos = modelBuilder.Entity<AccountBalanceDbo>();
-        accountBalanceDbos.HasKey(x => x.AccountId);
+        accountBalanceDbos
+            .HasKey(x => new { x.AccountId, x.Date })
+            .HasName("AccountDateKey");
     }
 }

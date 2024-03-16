@@ -36,6 +36,6 @@ public class UpdateBalanceCommand : IUpdateBalanceCommand
             ? -transaction.Amount.Value
             : transaction.Amount.Value;
 
-        await accountBalanceRepository.UpdateAsync(accountId, amountToAdd);
+        await accountBalanceRepository.UpdateAsync(accountId, transaction.CreatedAt, amountToAdd);
     }
 }

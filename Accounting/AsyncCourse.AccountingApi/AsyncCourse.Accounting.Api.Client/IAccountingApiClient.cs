@@ -15,4 +15,5 @@ public interface IAccountingApiClient // todo поменять bool на вме�
     Task<OperationResult<TransactionOutboxEvent>> ReadTransactionEventAsync();
     Task<OperationResult<bool>> DeleteTransactionEventAsync(Guid id);
     Task<OperationResult<bool>> UpdateBalanceAsync(Guid id);
+    Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid id);
 }

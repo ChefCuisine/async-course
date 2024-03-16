@@ -27,6 +27,20 @@ public static class TransactionOutboxEventExtensions
     }
     
     // Business events
+
+    public static MessageBusTransactionsEvent GetEventTransactionIssueDone(this TransactionOutboxEvent transaction)
+    {
+        return new MessageBusTransactionsEvent
+        {
+            MetaInfo = GetForBusinessEvent(MessageBusTransactionEventType.AnalyticsSent),
+            Context = Map(transaction)
+        };
+    }
+    
+    public static string ToBusinessMessage(this MessageBusTransactionsEvent businessEvent)
+    {
+        return JsonConvert.SerializeObject(businessEvent);
+    }
     
     // MetaInfo
     
@@ -44,13 +58,33 @@ public static class TransactionOutboxEventExtensions
         };
     }
     
+    private static MessageBusEventMetaInfo GetForBusinessEvent(
+        MessageBusTransactionEventType eventType,
+        int? version = null)
+    {
+        return new MessageBusEventMetaInfo
+        {
+            EventId = Guid.NewGuid().ToString(),
+            EventType = eventType.ToString(),
+            EventVersion = version ?? 1,
+            EventDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+            ProducerName = Constants.Producers.TransactionsBusiness
+        };
+    }
+    
     // Mapping
 
     private static MessageBusTransaction Map(TransactionOutboxEvent transactionEvent)
     {
         return new MessageBusTransaction
         {
-            TransactionId = transactionEvent.TransactionId
+            TransactionId = transactionEvent.TransactionId,
+            AnalyticsInfo = new MessageBusTransactionAnalyticsInfo
+            {
+                CreatedAt = transactionEvent.CreatedAt,
+                Amount = transactionEvent.Amount,
+                Type = transactionEvent.Type.ToString()
+            }
         };
     }
 }

@@ -4,6 +4,7 @@ using AsyncCourse.Accounting.Api.Db;
 using AsyncCourse.Accounting.Api.Models.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AsyncCourse.Accounting.Api.Db.Migrations
 {
     [DbContext(typeof(AccountingApiDbContext))]
-    partial class AccountingApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316134056_Add_Amount_To_TransactionOuntboxEvent")]
+    partial class Add_Amount_To_TransactionOuntboxEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,33 +111,6 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                     b.HasKey("IssueId");
 
                     b.ToTable("issues");
-                });
-
-            modelBuilder.Entity("AsyncCourse.Accounting.Api.Db.Dbos.MaxPriceIssueDbo", b =>
-                {
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date")
-                        .HasColumnName("date");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric")
-                        .HasColumnName("amount");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("IssueId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("issue_id");
-
-                    b.Property<Guid>("TransactionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("transaction_id");
-
-                    b.HasKey("Date");
-
-                    b.ToTable("max-price-issues");
                 });
 
             modelBuilder.Entity("AsyncCourse.Accounting.Api.Db.Dbos.TransactionDbo", b =>

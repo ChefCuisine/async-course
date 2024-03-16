@@ -49,18 +49,30 @@ public class TransactionsHandler
         {
             return;
         }
-        
-        // пока логика одинаковая но скорее всего что-то изменится в будущем
+
         switch (transactionEvent.Type)
         {
             case TransactionOutboxEventType.RemoveMoney:
-            case TransactionOutboxEventType.AddMoney:
             {
                 var streamEventMessage = transactionEvent
                     .GetEventCreated()
                     .ToStreamMessage();
 
                 await kafkaBus.SendMessageAsync(Constants.TransactionsStreamTopic, streamEventMessage);
+            }
+                break;
+            case TransactionOutboxEventType.AddMoney:
+            {
+                var streamEventMessage = transactionEvent
+                    .GetEventCreated()
+                    .ToStreamMessage();
+
+                var businessMessage = transactionEvent
+                    .GetEventTransactionIssueDone()
+                    .ToBusinessMessage();
+
+                await kafkaBus.SendMessageAsync(Constants.TransactionsStreamTopic, streamEventMessage);
+                await kafkaBus.SendMessageAsync(Constants.TransactionsTopic, businessMessage);
             }
                 break;
             case TransactionOutboxEventType.Unknown:

@@ -127,4 +127,18 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
         }
         return operationResult;
     }
+    
+    public async Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid id)
+    {
+        var request = Request
+            .Post("/analytics/update-max-price")
+            .WithAdditionalQueryParameter("transactionId", id);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
 }

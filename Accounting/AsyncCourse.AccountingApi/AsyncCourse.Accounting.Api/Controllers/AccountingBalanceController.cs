@@ -16,7 +16,7 @@ public class AccountingBalanceController : Controller
     [HttpPost("update")]
     public async Task<bool> Update([FromQuery] Guid transactionId)
     {
-        await updateBalanceCommand.UpdateBalance(transactionId);
+        await updateBalanceCommand.UpdateBalanceAsync(transactionId);
 
         return true;
     }

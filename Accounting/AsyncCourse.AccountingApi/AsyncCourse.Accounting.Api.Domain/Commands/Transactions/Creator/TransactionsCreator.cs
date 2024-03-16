@@ -56,7 +56,8 @@ public class TransactionsCreator : ITransactionsCreator
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.Now,
             Type = MapType(transactionType),
-            TransactionId = transaction.Id
+            TransactionId = transaction.Id,
+            Amount = price.Value,
         };
         await transactionOutboxEventRepository.AddAsync(transactionEvent);
     }

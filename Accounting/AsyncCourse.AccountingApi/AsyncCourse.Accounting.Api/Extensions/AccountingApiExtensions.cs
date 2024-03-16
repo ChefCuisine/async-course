@@ -1,11 +1,13 @@
 ﻿using AsyncCourse.Accounting.Api.Db;
 using AsyncCourse.Accounting.Api.Domain.Commands.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Commands.Analytics;
 using AsyncCourse.Accounting.Api.Domain.Commands.Balances;
 using AsyncCourse.Accounting.Api.Domain.Commands.Issues;
 using AsyncCourse.Accounting.Api.Domain.Commands.Issues.Calculator;
 using AsyncCourse.Accounting.Api.Domain.Commands.OutboxEvents;
 using AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Creator;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Analytics;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Balances;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
 using AsyncCourse.Accounting.Api.Domain.Repositories.OutboxEvents;
@@ -52,6 +54,7 @@ public static class AccountingApiExtensions
                 .AddSingleton<ITransactionRepository, TransactionRepository>()
                 .AddSingleton<ITransactionOutboxEventRepository, TransactionOutboxEventRepository>()
                 .AddSingleton<IAccountBalanceRepository, AccountBalanceRepository>()
+                .AddSingleton<IAnalyticsRepository, AnalyticsRepository>()
             ;
     }
     
@@ -68,6 +71,8 @@ public static class AccountingApiExtensions
                 .AddSingleton<IGetManagementBalanceCommand, GetManagementBalanceCommand>()
                 .AddSingleton<IReadOneTransactionOutboxEventCommand, ReadOneTransactionOutboxEventCommand>() // transaction event commands
                 .AddSingleton<IRemoveTransactionOutboxEventCommand, RemoveTransactionOutboxEventCommand>()
+                .AddSingleton<IUpdateMaxPriceIssueCommand, UpdateMaxPriceIssueCommand>() // analytics commands
+                .AddSingleton<IGetMaxPricesCommand, GetMaxPricesCommand>()
                 .AddSingleton<IIssueCalculator, IssueCalculator>() // other services using within commands
                 .AddSingleton<ITransactionsCreator, TransactionsCreator>()
             ;

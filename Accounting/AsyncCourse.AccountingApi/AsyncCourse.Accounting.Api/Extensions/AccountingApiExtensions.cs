@@ -73,6 +73,7 @@ public static class AccountingApiExtensions
                 .AddSingleton<IRemoveTransactionOutboxEventCommand, RemoveTransactionOutboxEventCommand>()
                 .AddSingleton<IUpdateMaxPriceIssueCommand, UpdateMaxPriceIssueCommand>() // analytics commands
                 .AddSingleton<IGetMaxPricesCommand, GetMaxPricesCommand>()
+                .AddSingleton<IGetBalanceAnalyticsCommand, GetBalanceAnalyticsCommand>()
                 .AddSingleton<IIssueCalculator, IssueCalculator>() // other services using within commands
                 .AddSingleton<ITransactionsCreator, TransactionsCreator>()
             ;

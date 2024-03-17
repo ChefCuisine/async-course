@@ -10,13 +10,16 @@ public class AnalyticsController : Controller
 {
     private readonly IUpdateMaxPriceIssueCommand updateMaxPriceIssueCommand;
     private readonly IGetMaxPricesCommand getMaxPricesCommand;
+    private readonly IGetBalanceAnalyticsCommand getBalanceAnalyticsCommand;
 
     public AnalyticsController(
         IUpdateMaxPriceIssueCommand updateMaxPriceIssueCommand,
-        IGetMaxPricesCommand getMaxPricesCommand)
+        IGetMaxPricesCommand getMaxPricesCommand,
+        IGetBalanceAnalyticsCommand getBalanceAnalyticsCommand)
     {
         this.updateMaxPriceIssueCommand = updateMaxPriceIssueCommand;
         this.getMaxPricesCommand = getMaxPricesCommand;
+        this.getBalanceAnalyticsCommand = getBalanceAnalyticsCommand;
     }
 
     [HttpPost("update-max-price")]
@@ -33,5 +36,15 @@ public class AnalyticsController : Controller
         var result = await getMaxPricesCommand.GetAsync(from, to);
 
         return result.Select(MaxPriceIssueMapping.MapFromDomainResult).ToList();
+    }
+    
+    [HttpGet("show-balances")]
+    public async Task<EarnedTodayBalanceModel> ShowBalances()
+    {
+        // Нужно указывать, сколько заработал топ-менеджмент за сегодня и сколько попугов ушло в минус
+        
+        var result = await getBalanceAnalyticsCommand.GetAsync();
+        
+        return EarnedTodayBalanceMapping.MapFromDomainResult(result);
     }
 }

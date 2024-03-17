@@ -18,6 +18,9 @@ public class TransactionDbo
     [Column("issue_info", TypeName = "jsonb")]
     public IssueTransactionInfo IssueInfo { get; set; }
     
+    [Column("closed_day_info", TypeName = "jsonb")]
+    public ClosedDayInfo ClosedDayInfo { get; set; }
+    
     [Column("amount")]
     public decimal? Amount { get; set; }
 }

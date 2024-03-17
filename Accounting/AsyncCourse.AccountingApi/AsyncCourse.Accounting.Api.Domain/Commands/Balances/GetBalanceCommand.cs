@@ -1,7 +1,6 @@
-﻿using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
+﻿using AsyncCourse.Accounting.Api.Domain.Commands.Transactions.Provider;
+using AsyncCourse.Accounting.Api.Domain.Repositories.Accounts;
 using AsyncCourse.Accounting.Api.Domain.Repositories.Balances;
-using AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
-using AsyncCourse.Accounting.Api.Domain.Repositories.Transactions;
 using AsyncCourse.Accounting.Api.Models.Accounts;
 using AsyncCourse.Accounting.Api.Models.Balances;
 
@@ -16,19 +15,16 @@ public class GetBalanceCommand : IGetBalanceCommand
 {
     private readonly IAccountBalanceRepository accountBalanceRepository;
     private readonly IAccountRepository accountRepository;
-    private readonly ITransactionRepository transactionRepository;
-    private readonly IIssueRepository issueRepository;
+    private readonly ITransactionInfoProvider transactionInfoProvider;
 
     public GetBalanceCommand(
         IAccountBalanceRepository accountBalanceRepository,
         IAccountRepository accountRepository,
-        ITransactionRepository transactionRepository,
-        IIssueRepository issueRepository)
+        ITransactionInfoProvider transactionInfoProvider)
     {
         this.accountBalanceRepository = accountBalanceRepository;
         this.accountRepository = accountRepository;
-        this.transactionRepository = transactionRepository;
-        this.issueRepository = issueRepository;
+        this.transactionInfoProvider = transactionInfoProvider;
     }
 
     public async Task<AccountBalanceInfo> GetBalanceAsync(Guid accountId, DateTime? dateTime = null)
@@ -65,33 +61,7 @@ public class GetBalanceCommand : IGetBalanceCommand
             Total = existingBalance.Total
         };
 
-        var transactions = await transactionRepository.GetForBalanceAsync(accountId, dateTime.Value);
-        if (!transactions.Any())
-        {
-            return response;
-        }
-
-        var issueIds = transactions.Select(x => x.IssueInfo.IssueId).Distinct().ToList();
-        var issues = await issueRepository.GetListAsync(issueIds);
-
-        var issuesInfo = issues.ToDictionary(
-            k => k.IssueId,
-            issue => new IssueBalanceInfo
-            {
-                JiraId = issue.JiraId,
-                Title = issue.Title,
-                Status = issue.Status
-            });
-
-        response.Transactions = transactions
-            .Select(transaction => new TransactionBalanceInfo
-            {
-                CreatedAt = transaction.CreatedAt,
-                Type = transaction.Type,
-                Amount = transaction.Amount,
-                IssueInfo = issuesInfo[transaction.IssueInfo.IssueId],
-            })
-            .ToList();
+        response.Transactions = await transactionInfoProvider.GetTransactionBalanceInfosAsync(accountId, dateTime.Value);
 
         return response;
     }

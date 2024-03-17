@@ -5,6 +5,8 @@ namespace AsyncCourse.Accounting.Api.Domain.Repositories.Balances;
 public interface IAccountBalanceRepository
 {
     Task<AccountBalance> GetAsync(Guid accountId, DateTime dateTime);
+    
+    Task<List<AccountBalance>> GetAllAsync(DateTime dateTime);
 
     Task<List<AccountBalance>> GetForPeriodAsync(Guid accountId, DateTime from, DateTime to);
 

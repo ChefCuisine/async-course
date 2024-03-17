@@ -1,4 +1,5 @@
 ﻿using AsyncCourse.Accounting.Api.Models.Accounts;
+using AsyncCourse.Accounting.Api.Models.Balances;
 using AsyncCourse.Accounting.Api.Models.Issues;
 using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Client;
@@ -14,6 +15,10 @@ public interface IAccountingApiClient // todo поменять bool на вме�
     Task<OperationResult<bool>> CloseIssueAsync(AccountingBusinessChangedIssue issue);
     Task<OperationResult<TransactionOutboxEvent>> ReadTransactionEventAsync();
     Task<OperationResult<bool>> DeleteTransactionEventAsync(Guid id);
-    Task<OperationResult<bool>> UpdateBalanceAsync(Guid id);
-    Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid id);
+    Task<OperationResult<bool>> UpdateBalanceAsync(Guid transactionId);
+    Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid transactionId);
+    Task<OperationResult<List<AccountBalance>>> GetAllForDateAsync(DateTime? dateTime = null);
+    Task<OperationResult<bool>> RenewBalanceAsync(Guid accountId, DateTime dateTime);
+    Task<OperationResult<bool>> CreateDayResultTransactionAsync(Guid accountId, DateTime dateTime);
+    Task<OperationResult<bool>> SendEmailAsync(Guid transactionId);
 }

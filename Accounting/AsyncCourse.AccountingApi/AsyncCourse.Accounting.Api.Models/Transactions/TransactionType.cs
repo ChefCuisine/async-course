@@ -5,4 +5,5 @@ public enum TransactionType
     Unknown = 0,
     IssueAssigned = 1,
     IssueDone = 2,
+    DayClosed = 3,
 }

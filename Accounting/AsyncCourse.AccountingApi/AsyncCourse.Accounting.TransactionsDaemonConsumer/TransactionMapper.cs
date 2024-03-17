@@ -22,6 +22,7 @@ public static class TransactionMapper
             {
                 "RemoveMoney" => TransactionType.IssueAssigned,
                 "AddMoney" => TransactionType.IssueDone,
+                "DayClosed" => TransactionType.DayClosed,
                 _ => TransactionType.Unknown
             };
         }
@@ -43,6 +44,7 @@ public static class TransactionMapper
         return type switch
         {
             "AnalyticsSent" => MessageBusTransactionEventType.AnalyticsSent,
+            "DayClosed" => MessageBusTransactionEventType.DayClosed,
             _ => MessageBusTransactionEventType.Unknown
         };
     }

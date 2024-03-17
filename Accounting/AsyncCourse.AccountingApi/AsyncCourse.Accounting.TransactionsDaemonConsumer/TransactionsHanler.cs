@@ -69,6 +69,9 @@ public class TransactionsHanler
                     await accountingApiClient.UpdateAnalyticsAsync(transaction.Id);
                 }
                 break;
+            case MessageBusTransactionEventType.DayClosed:
+                await accountingApiClient.SendEmailAsync(transaction.Id);
+                break;
             case MessageBusTransactionEventType.Unknown:
             default:
                 throw new ArgumentOutOfRangeException();

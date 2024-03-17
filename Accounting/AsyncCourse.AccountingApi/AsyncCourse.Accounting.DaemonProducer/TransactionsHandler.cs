@@ -75,6 +75,15 @@ public class TransactionsHandler
                 await kafkaBus.SendMessageAsync(Constants.TransactionsTopic, businessMessage);
             }
                 break;
+            case TransactionOutboxEventType.DayClosed:
+            {
+                var businessMessage = transactionEvent
+                    .GetEventDayClosed()
+                    .ToBusinessMessage();
+                
+                await kafkaBus.SendMessageAsync(Constants.TransactionsTopic, businessMessage);
+            }
+                break;
             case TransactionOutboxEventType.Unknown:
             default:
                 throw new ArgumentOutOfRangeException();

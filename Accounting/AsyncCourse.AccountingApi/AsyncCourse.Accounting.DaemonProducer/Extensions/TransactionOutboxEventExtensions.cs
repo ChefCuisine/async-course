@@ -37,6 +37,15 @@ public static class TransactionOutboxEventExtensions
         };
     }
     
+    public static MessageBusTransactionsEvent GetEventDayClosed(this TransactionOutboxEvent transaction)
+    {
+        return new MessageBusTransactionsEvent
+        {
+            MetaInfo = GetForBusinessEvent(MessageBusTransactionEventType.DayClosed),
+            Context = Map(transaction)
+        };
+    }
+    
     public static string ToBusinessMessage(this MessageBusTransactionsEvent businessEvent)
     {
         return JsonConvert.SerializeObject(businessEvent);

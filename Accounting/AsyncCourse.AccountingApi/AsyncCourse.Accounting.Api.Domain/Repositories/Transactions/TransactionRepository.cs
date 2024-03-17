@@ -52,6 +52,7 @@ public class TransactionRepository : ITransactionRepository
             CreatedAt = transaction.CreatedAt,
             Type = transaction.Type,
             IssueInfo = transaction.IssueInfo,
+            ClosedDayInfo = transaction.ClosedDayInfo,
             Amount = transaction.Amount
         };
     }
@@ -64,6 +65,7 @@ public class TransactionRepository : ITransactionRepository
             CreatedAt = dbo.CreatedAt,
             Type = dbo.Type,
             IssueInfo = dbo.IssueInfo,
+            ClosedDayInfo = dbo.ClosedDayInfo,
             Amount = dbo.Amount
         };
     }

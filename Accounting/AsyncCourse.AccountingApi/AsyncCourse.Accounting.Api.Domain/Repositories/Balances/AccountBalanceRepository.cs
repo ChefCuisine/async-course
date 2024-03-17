@@ -24,6 +24,20 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         return null;
     }
 
+    public async Task<List<AccountBalance>> GetAllAsync(DateTime dateTime)
+    {
+        var result = new List<AccountBalance>();
+
+        var dbos = accountingApiDbContext.AccountBalances.Where(x => x.Date == dateTime);
+
+        foreach (var dbo in dbos)
+        {
+            result.Add(DboToDomain(dbo));
+        }
+
+        return result;
+    }
+
     public async Task<List<AccountBalance>> GetForPeriodAsync(Guid accountId, DateTime from, DateTime to)
     {
         var result = new List<AccountBalance>();
@@ -74,7 +88,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
             {
                 Id = Guid.NewGuid(),
                 AccountId = accountId,
-                Date = dateTime,
+                Date = dateTime.Date,
                 Total = 0,
             };
         }
@@ -94,7 +108,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         {
             Id = accountBalance.Id == Guid.Empty ? Guid.NewGuid() : accountBalance.Id,
             AccountId = accountBalance.AccountId,
-            Date = accountBalance.Date,
+            Date = accountBalance.Date.Date,
             Total = accountBalance.Total,
         };
     }
@@ -105,7 +119,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         {
             Id = dbo.Id,
             AccountId = dbo.AccountId,
-            Date = dbo.Date,
+            Date = dbo.Date.Date,
             Total = dbo.Total,
         };
     }

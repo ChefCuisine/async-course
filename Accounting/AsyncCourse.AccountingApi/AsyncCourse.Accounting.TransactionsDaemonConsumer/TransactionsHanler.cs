@@ -66,7 +66,7 @@ public class TransactionsHanler
             case MessageBusTransactionEventType.AnalyticsSent:
                 if (MaxPriceChanged(transaction))
                 {
-                    await accountingApiClient.UpdateAnalyticsAsync(transaction.Id);
+                    await accountingApiClient.UpdateMaxPriceAsync(transaction.Id);
                 }
                 break;
             case MessageBusTransactionEventType.DayClosed:

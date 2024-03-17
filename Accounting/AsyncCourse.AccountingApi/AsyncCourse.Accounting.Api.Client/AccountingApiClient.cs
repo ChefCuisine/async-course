@@ -129,7 +129,7 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
         return operationResult;
     }
     
-    public async Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid transactionId)
+    public async Task<OperationResult<bool>> UpdateMaxPriceAsync(Guid transactionId)
     {
         var request = Request
             .Post("/analytics/update-max-price")

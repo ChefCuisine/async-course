@@ -16,7 +16,7 @@ public interface IAccountingApiClient // todo поменять bool на вме�
     Task<OperationResult<TransactionOutboxEvent>> ReadTransactionEventAsync();
     Task<OperationResult<bool>> DeleteTransactionEventAsync(Guid id);
     Task<OperationResult<bool>> UpdateBalanceAsync(Guid transactionId);
-    Task<OperationResult<bool>> UpdateAnalyticsAsync(Guid transactionId);
+    Task<OperationResult<bool>> UpdateMaxPriceAsync(Guid transactionId);
     Task<OperationResult<List<AccountBalance>>> GetAllForDateAsync(DateTime? dateTime = null);
     Task<OperationResult<bool>> RenewBalanceAsync(Guid accountId, DateTime dateTime);
     Task<OperationResult<bool>> CreateDayResultTransactionAsync(Guid accountId, DateTime dateTime);

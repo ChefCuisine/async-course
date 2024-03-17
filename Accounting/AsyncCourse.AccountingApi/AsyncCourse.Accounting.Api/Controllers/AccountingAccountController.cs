@@ -46,23 +46,23 @@ public class AccountingAccountController : Controller
     // dashboard methods
     
     [HttpGet("show-by-id")]
-    public async Task<AccountBalanceInfoModel> ShowById([FromQuery] Guid accountId)
+    public async Task<AccountBalanceInfoModel> ShowById([FromQuery] Guid accountId, DateTime? dateTime = null)
     {
         // должен показать какой на сегодня баланс
         // + лог операций
-        var result = await getBalanceCommand.GetBalanceAsync(accountId);
+        var result = await getBalanceCommand.GetBalanceAsync(accountId, dateTime);
         
         return AccountBalanceMapping.MapFromDomainResult(result);
     }
     
     // authorize только для админов и бухгалтеров
     [HttpGet("show")]
-    public async Task<ManagementBalanceInfoModel> Show([FromQuery] Guid accountId, int statDays)
+    public async Task<ManagementBalanceInfoModel> Show([FromQuery] Guid accountId, DateTime? dateTime = null, int? statDays = null)
     {
         // количество заработанных топ-менеджментом за сегодня денег
         // + статистика по дням
         
-        var result = await getManagementBalanceCommand.GetBalanceAsync(accountId);
+        var result = await getManagementBalanceCommand.GetBalanceAsync(accountId, dateTime, statDays);
         
         return AccountBalanceMapping.MapFromDomainResult(result);
     }

@@ -6,6 +6,8 @@ public interface IAccountBalanceRepository
 {
     Task<AccountBalance> GetAsync(Guid accountId, DateTime dateTime);
 
+    Task<List<AccountBalance>> GetForPeriodAsync(Guid accountId, DateTime from, DateTime to);
+
     Task CreateAsync(AccountBalance accountBalance);
 
     Task UpdateAsync(AccountBalance accountBalance);

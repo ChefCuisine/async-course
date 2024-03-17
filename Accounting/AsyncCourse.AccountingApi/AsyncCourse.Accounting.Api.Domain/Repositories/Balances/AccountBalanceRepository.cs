@@ -24,6 +24,23 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         return null;
     }
 
+    public async Task<List<AccountBalance>> GetForPeriodAsync(Guid accountId, DateTime from, DateTime to)
+    {
+        var result = new List<AccountBalance>();
+
+        while (from < to)
+        {
+            var dbo = await accountingApiDbContext.AccountBalances.FindAsync(accountId, from);
+            if (dbo != null)
+            {
+                result.Add(DboToDomain(dbo));
+                from = from.AddDays(1);
+            }
+        }
+
+        return result;
+    }
+
     public async Task CreateAsync(AccountBalance accountBalance)
     {
         await accountingApiDbContext.AccountBalances.AddAsync(DomainToDbo(accountBalance));

@@ -29,6 +29,10 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("account_id");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
@@ -37,7 +41,8 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("total");
 
-                    b.HasKey("AccountId");
+                    b.HasKey("AccountId", "Date")
+                        .HasName("AccountDateKey");
 
                     b.ToTable("account-balances");
                 });
@@ -106,6 +111,33 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                     b.ToTable("issues");
                 });
 
+            modelBuilder.Entity("AsyncCourse.Accounting.Api.Db.Dbos.MaxPriceIssueDbo", b =>
+                {
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric")
+                        .HasColumnName("amount");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("IssueId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("issue_id");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("transaction_id");
+
+                    b.HasKey("Date");
+
+                    b.ToTable("max-price-issues");
+                });
+
             modelBuilder.Entity("AsyncCourse.Accounting.Api.Db.Dbos.TransactionDbo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,6 +147,11 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                     b.Property<decimal?>("Amount")
                         .HasColumnType("numeric")
                         .HasColumnName("amount");
+
+                    b.Property<ClosedDayInfo>("ClosedDayInfo")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("closed_day_info");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("date")
@@ -139,6 +176,10 @@ namespace AsyncCourse.Accounting.Api.Db.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric")
+                        .HasColumnName("amount");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("date")

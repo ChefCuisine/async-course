@@ -11,7 +11,21 @@ public static class TransactionMapper
         return new Transaction
         {
             Id = messageBusTransaction.TransactionId,
+            Amount = messageBusTransaction.AnalyticsInfo.Amount,
+            Type = Map(messageBusTransaction.AnalyticsInfo.Type),
+            CreatedAt = messageBusTransaction.AnalyticsInfo.CreatedAt
         };
+
+        TransactionType Map(string type)
+        {
+            return type switch
+            {
+                "RemoveMoney" => TransactionType.IssueAssigned,
+                "AddMoney" => TransactionType.IssueDone,
+                "DayClosed" => TransactionType.DayClosed,
+                _ => TransactionType.Unknown
+            };
+        }
     }
     
     public static MessageBusStreamEventType GetStreamType(string type)
@@ -29,7 +43,8 @@ public static class TransactionMapper
     {
         return type switch
         {
-            // "RoleChanged" => MessageBusTransactionEventType.RoleChanged,
+            "AnalyticsSent" => MessageBusTransactionEventType.AnalyticsSent,
+            "DayClosed" => MessageBusTransactionEventType.DayClosed,
             _ => MessageBusTransactionEventType.Unknown
         };
     }

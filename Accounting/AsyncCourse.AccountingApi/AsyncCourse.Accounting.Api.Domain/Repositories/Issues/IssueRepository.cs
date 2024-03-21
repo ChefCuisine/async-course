@@ -1,7 +1,6 @@
 ﻿using AsyncCourse.Accounting.Api.Db;
 using AsyncCourse.Accounting.Api.Db.Dbos;
 using AsyncCourse.Accounting.Api.Models.Issues;
-using Microsoft.EntityFrameworkCore;
 
 namespace AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
 
@@ -14,10 +13,19 @@ public class IssueRepository : IIssueRepository
         accountingApiDbContext = contextFactory.CreateDbContext();
     }
     
-    public async Task<List<AccountingIssue>> GetListAsync()
+    public async Task<List<AccountingIssue>> GetListAsync(List<Guid> ids = null)
     {
-        var result = await accountingApiDbContext.Issues.ToListAsync();
-        var mappedResult = result.Select(DboToDomain).ToList();
+        IQueryable<AccountingIssueDbo> result;
+        if (ids != null)
+        {
+            result = accountingApiDbContext.Issues.Where(issue => ids.Contains(issue.IssueId));
+        }
+        else
+        {
+            result = accountingApiDbContext.Set<AccountingIssueDbo>();
+        }
+
+        var mappedResult = result.AsEnumerable().Select(DboToDomain).ToList();
 
         return mappedResult;
     }

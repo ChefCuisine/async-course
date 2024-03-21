@@ -11,6 +11,9 @@ public class AccountBalanceDbo
     [Column("account_id"), DatabaseGenerated(DatabaseGeneratedOption.None)]
     public Guid AccountId { get; set; }
     
+    [Column("date", TypeName = "date")]
+    public DateTime Date { get; set; }
+    
     [Column("total")]
     public decimal? Total { get; set; }
 }

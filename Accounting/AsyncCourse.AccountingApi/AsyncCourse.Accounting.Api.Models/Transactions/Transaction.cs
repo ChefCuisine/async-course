@@ -10,5 +10,7 @@ public class Transaction
 
     public IssueTransactionInfo IssueInfo { get; set; }
     
+    public ClosedDayInfo ClosedDayInfo { get; set; }
+    
     public decimal? Amount { get; set; }
 }

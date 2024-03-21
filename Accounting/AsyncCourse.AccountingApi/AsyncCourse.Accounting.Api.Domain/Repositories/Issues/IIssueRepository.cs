@@ -4,7 +4,7 @@ namespace AsyncCourse.Accounting.Api.Domain.Repositories.Issues;
 
 public interface IIssueRepository
 {
-    Task<List<AccountingIssue>> GetListAsync();
+    Task<List<AccountingIssue>> GetListAsync(List<Guid> ids = null);
     
     Task<AccountingIssue> GetAsync(Guid id);
     

@@ -3,4 +3,6 @@
 public enum MessageBusTransactionEventType
 {
     Unknown = 0,
+    AnalyticsSent = 1,
+    DayClosed = 2,
 }

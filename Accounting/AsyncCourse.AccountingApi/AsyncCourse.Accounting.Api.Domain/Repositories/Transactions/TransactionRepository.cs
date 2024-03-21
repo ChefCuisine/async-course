@@ -32,6 +32,16 @@ public class TransactionRepository : ITransactionRepository
         return null;
     }
 
+    public async Task<Transaction[]> GetForBalanceAsync(Guid accountId, DateTime dateTime)
+    {
+        var transactionDbos = accountingApiDbContext.Transactions.Where(
+            x => x.CreatedAt == dateTime &&
+                 x.IssueInfo != null && 
+                 x.IssueInfo.AssignToAccountId == accountId);
+
+        return transactionDbos.AsEnumerable().Select(DboToDomain).ToArray();
+    }
+
     #region Mapping
 
     private static TransactionDbo DomainToDbo(Transaction transaction)
@@ -42,6 +52,7 @@ public class TransactionRepository : ITransactionRepository
             CreatedAt = transaction.CreatedAt,
             Type = transaction.Type,
             IssueInfo = transaction.IssueInfo,
+            ClosedDayInfo = transaction.ClosedDayInfo,
             Amount = transaction.Amount
         };
     }
@@ -54,6 +65,7 @@ public class TransactionRepository : ITransactionRepository
             CreatedAt = dbo.CreatedAt,
             Type = dbo.Type,
             IssueInfo = dbo.IssueInfo,
+            ClosedDayInfo = dbo.ClosedDayInfo,
             Amount = dbo.Amount
         };
     }

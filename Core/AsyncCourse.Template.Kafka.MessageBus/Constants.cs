@@ -19,6 +19,9 @@ public static class Constants
     
     public const string TransactionsStreamTopic = "transactions-stream";
     public const string TransactionsTopic = "transactions";
+    
+    public const string AccountBalanceStreamTopic = "account-balances-stream";
+    public const string AccountBalanceTopic = "account-balances";
 
     public static class Producers
     {
@@ -28,5 +31,7 @@ public static class Constants
         public const string IssuesBusiness = "IssuesBusinessProducer";
         public const string TransactionsStream = "TransactionsStreamProducer";
         public const string TransactionsBusiness = "TransactionsBusinessProducer";
+        public const string AccountBalanceStream = "AccountBalanceStreamProducer";
+        public const string AccountBalanceBusiness = "AccountBalanceBusinessProducer";
     }
 }

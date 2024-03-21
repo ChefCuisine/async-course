@@ -1,4 +1,5 @@
 using AsyncCourse.Accounting.Api.Models.Accounts;
+using AsyncCourse.Accounting.Api.Models.Balances;
 using AsyncCourse.Accounting.Api.Models.Issues;
 using AsyncCourse.Accounting.Api.Models.OutboxEvents;
 using AsyncCourse.Client;
@@ -114,11 +115,83 @@ public class AccountingApiClient : RootClientBase, IAccountingApiClient
         return operationResult;
     }
 
-    public async Task<OperationResult<bool>> UpdateBalanceAsync(Guid id)
+    public async Task<OperationResult<bool>> UpdateBalanceAsync(Guid transactionId)
     {
         var request = Request
             .Post("/accounting-balance/update")
-            .WithAdditionalQueryParameter("transactionId", id);
+            .WithAdditionalQueryParameter("transactionId", transactionId);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+    
+    public async Task<OperationResult<bool>> UpdateMaxPriceAsync(Guid transactionId)
+    {
+        var request = Request
+            .Post("/analytics/update-max-price")
+            .WithAdditionalQueryParameter("transactionId", transactionId);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<List<AccountBalance>>> GetAllForDateAsync(DateTime? dateTime = null)
+    {
+        var request = Request
+            .Post("/accounting-balance/all-for-date")
+            .WithAdditionalQueryParameter("dateTime", dateTime);
+
+        var operationResult = await SendRequestAsync<List<AccountBalance>>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> RenewBalanceAsync(Guid accountId, DateTime dateTime)
+    {
+        var request = Request
+            .Post("/accounting-balance/renew")
+            .WithAdditionalQueryParameter("accountId", accountId)
+            .WithAdditionalQueryParameter("dateTime", dateTime);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> CreateDayResultTransactionAsync(Guid accountId, DateTime dateTime)
+    {
+        var request = Request
+            .Post("/accounting-balance/create-day-result")
+            .WithAdditionalQueryParameter("accountId", accountId)
+            .WithAdditionalQueryParameter("dateTime", dateTime);
+
+        var operationResult = await SendRequestAsync<bool>(request);
+        if (operationResult.IsSuccessful)
+        {
+            return operationResult;
+        }
+        return operationResult;
+    }
+
+    public async Task<OperationResult<bool>> SendEmailAsync(Guid transactionId)
+    {
+        var request = Request
+            .Post("/accounting-balance/send-report")
+            .WithAdditionalQueryParameter("transactionId", transactionId);
 
         var operationResult = await SendRequestAsync<bool>(request);
         if (operationResult.IsSuccessful)

@@ -13,16 +13,46 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         accountingApiDbContext = contextFactory.CreateDbContext();
     }
 
-    public async Task<AccountBalance> GetAsync(Guid id)
+    public async Task<AccountBalance> GetAsync(Guid accountId, DateTime dateTime)
     {
-        var dbo = await accountingApiDbContext.AccountBalances.FindAsync(id);
-
+        var dbo = await accountingApiDbContext.AccountBalances.FindAsync(accountId, dateTime);
         if (dbo != null)
         {
             return DboToDomain(dbo);
         }
 
         return null;
+    }
+
+    public async Task<List<AccountBalance>> GetAllAsync(DateTime dateTime)
+    {
+        var result = new List<AccountBalance>();
+
+        var dbos = accountingApiDbContext.AccountBalances.Where(x => x.Date == dateTime);
+
+        foreach (var dbo in dbos)
+        {
+            result.Add(DboToDomain(dbo));
+        }
+
+        return result;
+    }
+
+    public async Task<List<AccountBalance>> GetForPeriodAsync(Guid accountId, DateTime from, DateTime to)
+    {
+        var result = new List<AccountBalance>();
+
+        while (from < to)
+        {
+            var dbo = await accountingApiDbContext.AccountBalances.FindAsync(accountId, from);
+            if (dbo != null)
+            {
+                result.Add(DboToDomain(dbo));
+                from = from.AddDays(1);
+            }
+        }
+
+        return result;
     }
 
     public async Task CreateAsync(AccountBalance accountBalance)
@@ -34,25 +64,33 @@ public class AccountBalanceRepository : IAccountBalanceRepository
 
     public async Task UpdateAsync(AccountBalance accountBalance)
     {
-        var existingBalance = await accountingApiDbContext.AccountBalances.FindAsync(accountBalance.AccountId);
+        var existingBalance = await accountingApiDbContext.AccountBalances.FindAsync(accountBalance.AccountId, accountBalance.Date);
         if (existingBalance == null)
         {
-            return;
+            existingBalance = DomainToDbo(accountBalance);
         }
-
-        existingBalance.Total = accountBalance.Total;
+        else
+        {
+            existingBalance.Total = accountBalance.Total;
+        }
 
         accountingApiDbContext.AccountBalances.Update(existingBalance);
 
         await accountingApiDbContext.SaveChangesAsync();
     }
     
-    public async Task UpdateAsync(Guid accountId, decimal? amountToAdd = null)
+    public async Task UpdateAsync(Guid accountId, DateTime dateTime, decimal? amountToAdd = null)
     {
-        var existingBalance = await accountingApiDbContext.AccountBalances.FindAsync(accountId);
+        var existingBalance = await accountingApiDbContext.AccountBalances.FindAsync(accountId, dateTime);
         if (existingBalance == null)
         {
-            return;
+            existingBalance = new AccountBalanceDbo
+            {
+                Id = Guid.NewGuid(),
+                AccountId = accountId,
+                Date = dateTime.Date,
+                Total = 0,
+            };
         }
 
         existingBalance.Total += amountToAdd;
@@ -61,7 +99,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
 
         await accountingApiDbContext.SaveChangesAsync();
     }
-    
+
     #region Mapping
 
     private static AccountBalanceDbo DomainToDbo(AccountBalance accountBalance)
@@ -70,6 +108,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         {
             Id = accountBalance.Id == Guid.Empty ? Guid.NewGuid() : accountBalance.Id,
             AccountId = accountBalance.AccountId,
+            Date = accountBalance.Date.Date,
             Total = accountBalance.Total,
         };
     }
@@ -80,6 +119,7 @@ public class AccountBalanceRepository : IAccountBalanceRepository
         {
             Id = dbo.Id,
             AccountId = dbo.AccountId,
+            Date = dbo.Date.Date,
             Total = dbo.Total,
         };
     }

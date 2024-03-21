@@ -6,7 +6,7 @@ namespace AsyncCourse.Accounting.Api.Domain.Commands.Balances;
 
 public interface IUpdateBalanceCommand
 {
-    Task UpdateBalance(Guid transactionId);
+    Task UpdateBalanceAsync(Guid transactionId);
 }
 
 public class UpdateBalanceCommand : IUpdateBalanceCommand
@@ -22,7 +22,7 @@ public class UpdateBalanceCommand : IUpdateBalanceCommand
         this.transactionRepository = transactionRepository;
     }
 
-    public async Task UpdateBalance(Guid transactionId)
+    public async Task UpdateBalanceAsync(Guid transactionId)
     {
         var transaction = await transactionRepository.GetAsync(transactionId);
         if (transaction?.IssueInfo == null || !transaction.Amount.HasValue)
@@ -36,6 +36,6 @@ public class UpdateBalanceCommand : IUpdateBalanceCommand
             ? -transaction.Amount.Value
             : transaction.Amount.Value;
 
-        await accountBalanceRepository.UpdateAsync(accountId, amountToAdd);
+        await accountBalanceRepository.UpdateAsync(accountId, transaction.CreatedAt.Date, amountToAdd);
     }
 }

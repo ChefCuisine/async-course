@@ -17,4 +17,7 @@ public class TransactionOutboxEventDbo
     
     [Column("transaction_id"), DatabaseGenerated(DatabaseGeneratedOption.None)]
     public Guid TransactionId { get; set; }
+    
+    [Column("amount")]
+    public decimal Amount { get; set; }
 }

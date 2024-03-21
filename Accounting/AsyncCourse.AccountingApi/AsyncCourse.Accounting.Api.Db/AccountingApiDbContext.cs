@@ -24,6 +24,7 @@ public class AccountingApiDbContext : DbContext
     [NotNull] public DbSet<TransactionDbo> Transactions { get; set; }
     [NotNull] public DbSet<TransactionOutboxEventDbo> TransactionEvents { get; set; }
     [NotNull] public DbSet<AccountBalanceDbo> AccountBalances { get; set; }
+    [NotNull] public DbSet<MaxPriceIssueDbo> MaxPriceIssues { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -46,6 +47,11 @@ public class AccountingApiDbContext : DbContext
         transactionEventsDbos.HasKey(x => x.Id);
         
         var accountBalanceDbos = modelBuilder.Entity<AccountBalanceDbo>();
-        accountBalanceDbos.HasKey(x => x.AccountId);
+        accountBalanceDbos
+            .HasKey(x => new { x.AccountId, x.Date })
+            .HasName("AccountDateKey");
+        
+        var maxPriceIssueDbos = modelBuilder.Entity<MaxPriceIssueDbo>();
+        maxPriceIssueDbos.HasKey(x => x.Date);
     }
 }
